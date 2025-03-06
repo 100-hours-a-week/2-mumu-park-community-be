@@ -1,0 +1,40 @@
+# 프로젝트 문서 허용
+HELP.md
+
+# Gradle 관련 파일 무시
+.gradle
+build/**                 # 전체 build 폴더 무시
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/   # src/main 내부의 build 폴더는 추적
+!**/src/test/**/build/   # src/test 내부의 build 폴더는 추적
+
+# Spring Tool Suite(STS) 관련 파일 무시
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/**                   # 전체 bin 폴더 무시
+!**/src/main/**/bin/     # src/main 내부의 bin 폴더는 추적
+!**/src/test/**/bin/     # src/test 내부의 bin 폴더는 추적
+
+# IntelliJ IDEA 관련 파일 무시
+.idea
+*.iws
+*.iml
+*.ipr
+out/**                   # 전체 out 폴더 무시
+!**/src/main/**/out/     # src/main 내부의 out 폴더는 추적
+!**/src/test/**/out/     # src/test 내부의 out 폴더는 추적
+
+# NetBeans 관련 파일 무시
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code 관련 파일 무시
+.vscode/
