@@ -19,6 +19,7 @@ build/**                 # 전체 build 폴더 무시
 bin/**                   # 전체 bin 폴더 무시
 !**/src/main/**/bin/     # src/main 내부의 bin 폴더는 추적
 !**/src/test/**/bin/     # src/test 내부의 bin 폴더는 추적
+*.yml
 
 # IntelliJ IDEA 관련 파일 무시
 .idea
