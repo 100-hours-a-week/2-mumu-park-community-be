@@ -1,7 +1,9 @@
 package com.kaboot.community.board.entity;
 
-import com.kaboot.common.entity.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,21 +13,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Board extends BaseEntity {
-
+public class Likes {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long memberId;
 
-    @Column(length = 100)
-    private String title;
-
-    @Column(columnDefinition = "LONGTEXT")
-    private String content;
-
-    @Column(length = 2083)
-    private String imgUrl;
-
-    private Integer viewCount;
+    private Long boardId;
 }
