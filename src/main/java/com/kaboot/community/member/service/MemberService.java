@@ -42,4 +42,12 @@ public class MemberService {
             throw new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST);
         }
     }
+
+    public boolean isEmailDuplicate(String email) {
+        return memberRepository.existsByUsername(email);
+    }
+
+    public boolean isNicknameDuplicate(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
 }
