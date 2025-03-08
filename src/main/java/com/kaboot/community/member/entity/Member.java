@@ -2,6 +2,7 @@ package com.kaboot.community.member.entity;
 
 
 import com.kaboot.community.common.entity.BaseEntity;
+import com.kaboot.community.member.dto.request.ModifyRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,4 +27,9 @@ public class Member extends BaseEntity {
 
     @Column(length = 2083)
     private String profileImgUrl;
+
+    public void update(ModifyRequest modifyRequest) {
+        this.nickname = modifyRequest.nickname();
+        this.profileImgUrl = modifyRequest.profileImg();
+    }
 }

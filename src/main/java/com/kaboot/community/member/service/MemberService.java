@@ -4,6 +4,7 @@ import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.exception.CustomException;
 import com.kaboot.community.member.dto.MemberInfo;
 import com.kaboot.community.member.dto.request.LoginRequest;
+import com.kaboot.community.member.dto.request.ModifyRequest;
 import com.kaboot.community.member.dto.request.RegisterRequest;
 import com.kaboot.community.member.entity.Member;
 import com.kaboot.community.member.mapper.UserMapper;
@@ -49,5 +50,17 @@ public class MemberService {
 
     public boolean isNicknameDuplicate(String nickname) {
         return memberRepository.existsByNickname(nickname);
+    }
+
+    @Transactional
+    public void update(String userEmail, ModifyRequest modifyRequest) {
+        Member member = memberRepository.findByUsername(userEmail)
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
+
+        if(isNicknameDuplicate(modifyRequest.nickname())) {
+            throw new CustomException(CustomResponseStatus.NICKNAME_ALREADY_EXIST);
+        }
+
+        member.update(modifyRequest);
     }
 }

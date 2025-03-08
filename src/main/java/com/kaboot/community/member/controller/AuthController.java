@@ -2,11 +2,11 @@ package com.kaboot.community.member.controller;
 
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
+import com.kaboot.community.common.util.SessionUtil;
 import com.kaboot.community.member.dto.request.LoginRequest;
 import com.kaboot.community.member.dto.request.RegisterRequest;
 import com.kaboot.community.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +31,7 @@ public class AuthController {
     ) {
         memberService.login(loginRequest);
 
-        HttpSession session = request.getSession();
-        session.setAttribute("member", loginRequest.email());
+        SessionUtil.setLoggedInUser(request, loginRequest.email());
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 

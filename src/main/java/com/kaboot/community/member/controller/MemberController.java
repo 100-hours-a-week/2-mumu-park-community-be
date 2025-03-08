@@ -2,9 +2,12 @@ package com.kaboot.community.member.controller;
 
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
+import com.kaboot.community.common.util.SessionUtil;
 import com.kaboot.community.member.dto.MemberInfo;
+import com.kaboot.community.member.dto.request.ModifyRequest;
 import com.kaboot.community.member.dto.response.ExistResponse;
 import com.kaboot.community.member.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,5 +47,15 @@ public class MemberController {
     public ResponseEntity<ApiResponse<ExistResponse>> checkNicknameDuplicate(@RequestParam String nickname) {
         boolean isDuplicate = memberService.isNicknameDuplicate(nickname);
         return ResponseEntity.ok(ApiResponse.createSuccess(new ExistResponse(isDuplicate), CustomResponseStatus.SUCCESS));
+    }
+
+    @PatchMapping("/users")
+    public ResponseEntity<ApiResponse<Void>> updateMember(
+            HttpServletRequest request,
+            @RequestBody ModifyRequest modifyRequest
+    ) {
+        String loggedInUserEmail = SessionUtil.getLoggedInUserEmail(request);
+        memberService.update(loggedInUserEmail, modifyRequest);
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 }
