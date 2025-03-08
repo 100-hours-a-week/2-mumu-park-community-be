@@ -1,11 +1,11 @@
 package com.kaboot.community.board.mapper;
 
-import com.kaboot.community.board.dto.PostRequest;
+import com.kaboot.community.board.dto.PostOrModifyRequest;
 import com.kaboot.community.board.entity.Board;
 
 public class BoardMapper {
 
-    public static Board toBoardFromPostRequest(PostRequest postRequest, Long memberId) {
+    public static Board toBoardFromPostRequest(PostOrModifyRequest postRequest, Long memberId) {
         return Board.builder()
                 .title(postRequest.title())
                 .content(postRequest.content())

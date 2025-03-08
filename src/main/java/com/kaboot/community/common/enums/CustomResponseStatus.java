@@ -14,6 +14,8 @@ public enum CustomResponseStatus {
     PASSWORD_NOT_MATCH(HttpStatus.CONFLICT.value(), "비밀번호가 일치하지 않습니다."),
     INVALID_REQUEST(HttpStatus.BAD_REQUEST.value(), "유효하지 않은 요청입니다."),
 
+    UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED.value(), "권한이 없습니다."),
+
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "내부 서버 오류입니다."),
     ;
 

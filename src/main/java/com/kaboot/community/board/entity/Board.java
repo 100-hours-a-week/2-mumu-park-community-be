@@ -1,5 +1,6 @@
 package com.kaboot.community.board.entity;
 
+import com.kaboot.community.board.dto.PostOrModifyRequest;
 import com.kaboot.community.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,5 +33,12 @@ public class Board extends BaseEntity {
 
     public void upViewCount() {
         this.viewCount++;
+    }
+
+    public void update(PostOrModifyRequest modifyRequest) {
+        this.title = modifyRequest.title();
+        this.content = modifyRequest.content();
+        this.imageOriginalName = modifyRequest.imageOriginalName();
+        this.imgUrl = modifyRequest.imageUrl();
     }
 }

@@ -1,6 +1,6 @@
 package com.kaboot.community.board.controller;
 
-import com.kaboot.community.board.dto.PostRequest;
+import com.kaboot.community.board.dto.PostOrModifyRequest;
 import com.kaboot.community.board.entity.Board;
 import com.kaboot.community.board.service.BoardService;
 import com.kaboot.community.common.dto.ApiResponse;
@@ -25,12 +25,24 @@ public class BoardController {
     }
 
     @PostMapping()
-    public ResponseEntity<ApiResponse<?>> post(
+    public ResponseEntity<ApiResponse<Void>> post(
             HttpServletRequest request,
-            @RequestBody PostRequest postRequest
+            @RequestBody PostOrModifyRequest postRequest
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
         boardService.post(loggedInUserEmail, postRequest);
+
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+    }
+
+    @PatchMapping("/{boardId}")
+    public ResponseEntity<ApiResponse<?>> modifyBoard(
+            HttpServletRequest request,
+            @RequestBody PostOrModifyRequest modifyRequest,
+            @PathVariable Long boardId
+    ) {
+        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
+        boardService.modifyBoard(loggedInUserEmail, modifyRequest, boardId);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
