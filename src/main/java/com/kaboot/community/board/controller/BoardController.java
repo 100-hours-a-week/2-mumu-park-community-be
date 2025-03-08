@@ -1,5 +1,6 @@
 package com.kaboot.community.board.controller;
 
+import com.kaboot.community.board.dto.request.CommentPostOrModifyRequest;
 import com.kaboot.community.board.dto.request.LikeRequest;
 import com.kaboot.community.board.dto.request.PostOrModifyRequest;
 import com.kaboot.community.board.service.BoardService;
@@ -59,6 +60,18 @@ public class BoardController {
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
         boardService.toggleLike(loggedInUserEmail, boardId, likeRequest);
+
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+    }
+
+    @PostMapping("/{boardId}/comments")
+    public ResponseEntity<ApiResponse<Void>> postComment(
+            HttpServletRequest request,
+            @PathVariable Long boardId,
+            @RequestBody CommentPostOrModifyRequest commentPostRequest
+    ) {
+        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
+        boardService.postComment(loggedInUserEmail, boardId, commentPostRequest);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }

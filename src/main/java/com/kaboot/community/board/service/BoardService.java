@@ -1,11 +1,14 @@
 package com.kaboot.community.board.service;
 
+import com.kaboot.community.board.dto.request.CommentPostOrModifyRequest;
 import com.kaboot.community.board.dto.request.LikeRequest;
 import com.kaboot.community.board.dto.request.PostOrModifyRequest;
 import com.kaboot.community.board.entity.Board;
 import com.kaboot.community.board.entity.Likes;
 import com.kaboot.community.board.mapper.BoardMapper;
+import com.kaboot.community.board.mapper.CommentMapper;
 import com.kaboot.community.board.mapper.LikesMapper;
+import com.kaboot.community.board.repository.CommentRepository;
 import com.kaboot.community.board.repository.LikesRepository;
 import com.kaboot.community.board.repository.board.BoardRepository;
 import com.kaboot.community.common.enums.CustomResponseStatus;
@@ -24,6 +27,7 @@ public class BoardService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final LikesRepository likesRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public void post(String username, PostOrModifyRequest postRequest) {
@@ -75,7 +79,15 @@ public class BoardService {
 
         likesRepository.delete(likes);
     }
-    
+
+    @Transactional
+    public void postComment(String username, Long boardId, CommentPostOrModifyRequest commentPostRequest) {
+        Member member = findMemberByUsername(username);
+        Board board = getBoardById(boardId);
+
+        commentRepository.save(CommentMapper.toEntity(board.getId(), member.getId(), commentPostRequest));
+    }
+
     private Member findMemberByUsername(String username) {
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
@@ -89,6 +101,7 @@ public class BoardService {
     private boolean isNotSameMember(Long boardWriterId, Long accessMemberId) {
         return !Objects.equals(boardWriterId, accessMemberId);
     }
+
 
 
 }
