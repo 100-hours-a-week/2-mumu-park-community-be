@@ -1,6 +1,6 @@
 package com.kaboot.community.board.entity;
 
-import com.kaboot.common.entity.BaseEntity;
+import com.kaboot.community.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

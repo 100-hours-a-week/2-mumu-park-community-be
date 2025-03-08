@@ -1,4 +1,4 @@
-package com.kaboot.common.entity;
+package com.kaboot.community.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
