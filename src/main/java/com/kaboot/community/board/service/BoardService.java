@@ -4,6 +4,7 @@ import com.kaboot.community.board.dto.request.CommentPostOrModifyRequest;
 import com.kaboot.community.board.dto.request.LikeRequest;
 import com.kaboot.community.board.dto.request.PostOrModifyRequest;
 import com.kaboot.community.board.entity.Board;
+import com.kaboot.community.board.entity.Comment;
 import com.kaboot.community.board.entity.Likes;
 import com.kaboot.community.board.mapper.BoardMapper;
 import com.kaboot.community.board.mapper.CommentMapper;
@@ -88,6 +89,18 @@ public class BoardService {
         commentRepository.save(CommentMapper.toEntity(board.getId(), member.getId(), commentPostRequest));
     }
 
+    @Transactional
+    public void modifyComment(String username, Long commentId, CommentPostOrModifyRequest commentModifyRequest) {
+        Member member = findMemberByUsername(username);
+        Comment comment = getCommentById(commentId);
+
+        if (!comment.isSameMember(member.getId())) {
+            throw new CustomException(CustomResponseStatus.UNAUTHORIZED_REQUEST);
+        }
+
+        comment.updateComment(commentModifyRequest);
+    }
+
     private Member findMemberByUsername(String username) {
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
@@ -95,13 +108,15 @@ public class BoardService {
 
     private Board getBoardById(Long boardId) {
         return boardRepository.findById(boardId)
-                .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.BOARD_NOT_EXIST));
+    }
+
+    private Comment getCommentById(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.COMMENT_NOT_EXIST));
     }
 
     private boolean isNotSameMember(Long boardWriterId, Long accessMemberId) {
         return !Objects.equals(boardWriterId, accessMemberId);
     }
-
-
-
 }

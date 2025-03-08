@@ -9,6 +9,8 @@ public enum CustomResponseStatus {
     SUCCESS_WITH_NO_CONTENT(HttpStatus.NO_CONTENT.value() , "요청에 성공하였습니다."),
 
     MEMBER_NOT_EXIST(HttpStatus.NOT_FOUND.value(), "존재하지 않는 회원정보 입니다. 아이디와 비밀번호를 확인해주세요."),
+    BOARD_NOT_EXIST(HttpStatus.NOT_FOUND.value(), "존재하지 게시글입니다."),
+    COMMENT_NOT_EXIST(HttpStatus.NOT_FOUND.value(), "존재하지 댓글입니다."),
     MEMBER_ALREADY_EXIST(HttpStatus.CONFLICT.value(), "이미 존재하는 회원 정보입니다. 로그인을 이용해주세요."),
     NICKNAME_ALREADY_EXIST(HttpStatus.CONFLICT.value(), "이미 존재하는 닉네임입니다."),
     PASSWORD_NOT_MATCH(HttpStatus.CONFLICT.value(), "비밀번호가 일치하지 않습니다."),

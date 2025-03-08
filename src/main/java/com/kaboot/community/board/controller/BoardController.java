@@ -75,4 +75,16 @@ public class BoardController {
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
+
+    @PatchMapping("/comments/{commentId}")
+    public ResponseEntity<ApiResponse<Void>> modifyComment(
+            HttpServletRequest request,
+            @PathVariable Long commentId,
+            @RequestBody CommentPostOrModifyRequest commentModifyRequest
+    ) {
+        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
+        boardService.modifyComment(loggedInUserEmail, commentId, commentModifyRequest);
+
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+    }
 }
