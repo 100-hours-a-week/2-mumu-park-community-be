@@ -1,7 +1,6 @@
 package com.kaboot.community.board.controller;
 
 import com.kaboot.community.board.dto.PostOrModifyRequest;
-import com.kaboot.community.board.entity.Board;
 import com.kaboot.community.board.service.BoardService;
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
@@ -17,13 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class BoardController {
     private final BoardService boardService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Board> getBoardById(@PathVariable Long id) {
-        Board board = boardService.getBoardById(id);
-
-        return ResponseEntity.ok().body(board);
-    }
-
     @PostMapping()
     public ResponseEntity<ApiResponse<Void>> post(
             HttpServletRequest request,
@@ -36,13 +28,24 @@ public class BoardController {
     }
 
     @PatchMapping("/{boardId}")
-    public ResponseEntity<ApiResponse<?>> modifyBoard(
+    public ResponseEntity<ApiResponse<Void>> modifyBoard(
             HttpServletRequest request,
             @RequestBody PostOrModifyRequest modifyRequest,
             @PathVariable Long boardId
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
         boardService.modifyBoard(loggedInUserEmail, modifyRequest, boardId);
+
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+    }
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<ApiResponse<Void>> modifyBoard(
+            HttpServletRequest request,
+            @PathVariable Long boardId
+    ) {
+        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
+        boardService.deleteBoard(loggedInUserEmail, boardId);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
