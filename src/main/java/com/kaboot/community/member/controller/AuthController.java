@@ -40,7 +40,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Void>> login(
             HttpServletRequest request
     ) {
-        String loggedInUserEmail = SessionUtil.getLoggedInUserEmail(request);
+        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
 
         if (loggedInUserEmail == null) { // 세션에 저장된 로그인 정보가 없으면 로그아웃 불가
             throw new CustomException(CustomResponseStatus.INVALID_REQUEST);

@@ -3,7 +3,6 @@ package com.kaboot.community.member.controller;
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.util.SessionUtil;
-import com.kaboot.community.member.dto.MemberInfo;
 import com.kaboot.community.member.dto.request.ModifyRequest;
 import com.kaboot.community.member.dto.request.PasswordUpdateRequest;
 import com.kaboot.community.member.dto.response.ExistResponse;
@@ -45,7 +44,7 @@ public class MemberController {
             HttpServletRequest request,
             @RequestBody ModifyRequest modifyRequest
     ) {
-        String loggedInUserEmail = SessionUtil.getLoggedInUserEmail(request);
+        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
         memberService.update(loggedInUserEmail, modifyRequest);
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
@@ -55,7 +54,7 @@ public class MemberController {
             HttpServletRequest request,
             @RequestBody PasswordUpdateRequest passwordUpdateRequest
     ) {
-        String loggedInUserEmail = SessionUtil.getLoggedInUserEmail(request);
+        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
         memberService.updatePassword(loggedInUserEmail, passwordUpdateRequest);
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }

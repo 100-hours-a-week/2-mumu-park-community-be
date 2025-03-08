@@ -12,7 +12,7 @@ public class SessionUtil {
      * @param request HttpServletRequest 객체
      * @return 로그인된 사용자의 이메일 (없으면 null 반환)
      */
-    public static String getLoggedInUserEmail(HttpServletRequest request) {
+    public static String getLoggedInUsername(HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 기존 세션 가져오기 (없으면 null)
         if (session == null) {
             return null;
