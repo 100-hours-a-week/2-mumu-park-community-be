@@ -7,6 +7,7 @@ import com.kaboot.community.member.dto.request.LoginRequest;
 import com.kaboot.community.member.dto.request.ModifyRequest;
 import com.kaboot.community.member.dto.request.PasswordUpdateRequest;
 import com.kaboot.community.member.dto.request.RegisterRequest;
+import com.kaboot.community.member.dto.response.MemberInfoResponse;
 import com.kaboot.community.member.entity.Member;
 import com.kaboot.community.member.mapper.UserMapper;
 import com.kaboot.community.member.repository.MemberJdbcRepository;
@@ -22,12 +23,16 @@ import java.util.Objects;
 public class MemberService {
     private final MemberJdbcRepository memberJdbcRepository;
     private final MemberRepository memberRepository;
-    public Integer calculateAgeByBirthYear(Integer birthYear) {
-        return 2025 - birthYear + 1;
-    }
 
-    public MemberInfo getMemberInfoById(Long id) {
-        return memberJdbcRepository.findByMemberById(id);
+    public MemberInfoResponse getMemberInfoById(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
+
+        return new MemberInfoResponse(
+                member.getUsername(),
+                member.getNickname(),
+                member.getProfileImgUrl()
+        );
     }
 
     @Transactional

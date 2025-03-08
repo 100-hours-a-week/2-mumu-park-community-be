@@ -7,6 +7,7 @@ import com.kaboot.community.member.dto.MemberInfo;
 import com.kaboot.community.member.dto.request.ModifyRequest;
 import com.kaboot.community.member.dto.request.PasswordUpdateRequest;
 import com.kaboot.community.member.dto.response.ExistResponse;
+import com.kaboot.community.member.dto.response.MemberInfoResponse;
 import com.kaboot.community.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -19,25 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
 
-    @GetMapping()
-    public ResponseEntity<String> getMumu() {
-        return ResponseEntity.ok().body("hi my name is mumu");
-    }
-
-    @GetMapping("/age/{birthYear}")
-    public ResponseEntity<String> getMumuAge(@PathVariable Integer birthYear) {
-        Integer age = memberService.calculateAgeByBirthYear(birthYear);
-
-        return ResponseEntity.ok().body("hi my name is mumu, his age is " + age);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<MemberInfo> getMemberInfo(@PathVariable Long id) {
-        MemberInfo memberInfo = memberService.getMemberInfoById(id);
-
-        return ResponseEntity.ok().body(memberInfo);
-    }
-
     @GetMapping("/email")
     public ResponseEntity<ApiResponse<ExistResponse>> checkEmailDuplicate(@RequestParam String email) {
         boolean isDuplicate = memberService.isEmailDuplicate(email);
@@ -48,6 +30,14 @@ public class MemberController {
     public ResponseEntity<ApiResponse<ExistResponse>> checkNicknameDuplicate(@RequestParam String nickname) {
         boolean isDuplicate = memberService.isNicknameDuplicate(nickname);
         return ResponseEntity.ok(ApiResponse.createSuccess(new ExistResponse(isDuplicate), CustomResponseStatus.SUCCESS));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<MemberInfoResponse>> getMemberInfo(
+            @PathVariable Long id
+    ) {
+        MemberInfoResponse response = memberService.getMemberInfoById(id);
+        return ResponseEntity.ok(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
     }
 
     @PatchMapping("")
