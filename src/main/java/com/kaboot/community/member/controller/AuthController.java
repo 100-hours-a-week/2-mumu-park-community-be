@@ -2,6 +2,7 @@ package com.kaboot.community.member.controller;
 
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
+import com.kaboot.community.common.exception.CustomException;
 import com.kaboot.community.common.util.SessionUtil;
 import com.kaboot.community.member.dto.request.LoginRequest;
 import com.kaboot.community.member.dto.request.RegisterRequest;
@@ -35,4 +36,17 @@ public class AuthController {
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Void>> login(
+            HttpServletRequest request
+    ) {
+        String loggedInUserEmail = SessionUtil.getLoggedInUserEmail(request);
+
+        if (loggedInUserEmail == null) { // 세션에 저장된 로그인 정보가 없으면 로그아웃 불가
+            throw new CustomException(CustomResponseStatus.INVALID_REQUEST);
+        }
+
+        SessionUtil.invalidateSession(request);
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("로그아웃에 성공하였습니다.")));
+    }
 }
