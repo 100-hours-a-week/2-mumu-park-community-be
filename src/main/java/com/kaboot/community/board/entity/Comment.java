@@ -4,12 +4,16 @@ import com.kaboot.community.board.dto.request.CommentPostOrModifyRequest;
 import com.kaboot.community.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@SQLRestriction("deleted_at is NULL")
 public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,5 +32,9 @@ public class Comment extends BaseEntity {
 
     public void updateComment(CommentPostOrModifyRequest modifyRequest) {
         this.content = modifyRequest.content();
+    }
+
+    public void delete(LocalDateTime now) {
+        this.deletedAt = now;
     }
 }

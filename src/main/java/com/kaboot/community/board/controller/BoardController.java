@@ -87,4 +87,15 @@ public class BoardController {
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
+
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<ApiResponse<Void>> deleteComment(
+            HttpServletRequest request,
+            @PathVariable Long commentId
+    ) {
+        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
+        boardService.deleteComment(loggedInUserEmail, commentId);
+
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+    }
 }

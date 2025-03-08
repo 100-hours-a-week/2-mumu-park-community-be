@@ -20,6 +20,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -99,6 +100,18 @@ public class BoardService {
         }
 
         comment.updateComment(commentModifyRequest);
+    }
+
+    @Transactional
+    public void deleteComment(String username, Long commentId) {
+        Member member = findMemberByUsername(username);
+        Comment comment = getCommentById(commentId);
+
+        if (!comment.isSameMember(member.getId())) {
+            throw new CustomException(CustomResponseStatus.UNAUTHORIZED_REQUEST);
+        }
+
+        comment.delete(LocalDateTime.now());
     }
 
     private Member findMemberByUsername(String username) {

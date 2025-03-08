@@ -22,5 +22,5 @@ public class BaseEntity {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime modifiedAt;
 
-    private LocalDateTime deletedAt;
+    protected LocalDateTime deletedAt;
 }

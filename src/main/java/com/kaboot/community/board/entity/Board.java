@@ -4,12 +4,14 @@ import com.kaboot.community.board.dto.request.PostOrModifyRequest;
 import com.kaboot.community.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@SQLRestriction("deleted_at is NULL")
 public class Board extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +34,7 @@ public class Board extends BaseEntity {
     private Integer viewCount;
 
     public void upViewCount() {
+        // Todo : 상세조회시 사용할 메서드
         this.viewCount++;
     }
 
