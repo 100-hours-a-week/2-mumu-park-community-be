@@ -1,4 +1,4 @@
-package com.kaboot.community.board.dto;
+package com.kaboot.community.board.dto.request;
 
 public record PostOrModifyRequest(
         String title,

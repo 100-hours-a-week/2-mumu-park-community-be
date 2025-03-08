@@ -1,6 +1,7 @@
 package com.kaboot.community.board.controller;
 
-import com.kaboot.community.board.dto.PostOrModifyRequest;
+import com.kaboot.community.board.dto.request.LikeRequest;
+import com.kaboot.community.board.dto.request.PostOrModifyRequest;
 import com.kaboot.community.board.service.BoardService;
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
@@ -46,6 +47,18 @@ public class BoardController {
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
         boardService.deleteBoard(loggedInUserEmail, boardId);
+
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+    }
+
+    @PostMapping("/{boardId}/likes")
+    public ResponseEntity<ApiResponse<Void>> toggleLike(
+            HttpServletRequest request,
+            @PathVariable Long boardId,
+            @RequestBody LikeRequest likeRequest
+    ) {
+        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
+        boardService.toggleLike(loggedInUserEmail, boardId, likeRequest);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }

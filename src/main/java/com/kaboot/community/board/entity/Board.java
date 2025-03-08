@@ -1,6 +1,6 @@
 package com.kaboot.community.board.entity;
 
-import com.kaboot.community.board.dto.PostOrModifyRequest;
+import com.kaboot.community.board.dto.request.PostOrModifyRequest;
 import com.kaboot.community.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

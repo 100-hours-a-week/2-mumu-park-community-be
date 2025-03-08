@@ -1,6 +1,6 @@
 package com.kaboot.community.board.mapper;
 
-import com.kaboot.community.board.dto.PostOrModifyRequest;
+import com.kaboot.community.board.dto.request.PostOrModifyRequest;
 import com.kaboot.community.board.entity.Board;
 
 public class BoardMapper {

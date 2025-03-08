@@ -13,6 +13,7 @@ public enum CustomResponseStatus {
     NICKNAME_ALREADY_EXIST(HttpStatus.CONFLICT.value(), "이미 존재하는 닉네임입니다."),
     PASSWORD_NOT_MATCH(HttpStatus.CONFLICT.value(), "비밀번호가 일치하지 않습니다."),
     INVALID_REQUEST(HttpStatus.BAD_REQUEST.value(), "유효하지 않은 요청입니다."),
+    LIKES_NOT_EXIST(HttpStatus.NOT_FOUND.value(), "유효하지 않은 좋아요 요청입니다."),
 
     UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED.value(), "권한이 없습니다."),
 
