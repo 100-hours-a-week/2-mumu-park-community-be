@@ -5,6 +5,7 @@ import com.kaboot.community.common.exception.CustomException;
 import com.kaboot.community.member.dto.MemberInfo;
 import com.kaboot.community.member.dto.request.LoginRequest;
 import com.kaboot.community.member.dto.request.ModifyRequest;
+import com.kaboot.community.member.dto.request.PasswordUpdateRequest;
 import com.kaboot.community.member.dto.request.RegisterRequest;
 import com.kaboot.community.member.entity.Member;
 import com.kaboot.community.member.mapper.UserMapper;
@@ -62,5 +63,17 @@ public class MemberService {
         }
 
         member.update(modifyRequest);
+    }
+
+    @Transactional
+    public void updatePassword(String userEmail, PasswordUpdateRequest passwordUpdateRequest) {
+        Member member = memberRepository.findByUsername(userEmail)
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
+
+        if(!member.isSamePassword(passwordUpdateRequest.prevPassword())) {
+            throw new CustomException(CustomResponseStatus.PASSWORD_NOT_MATCH);
+        }
+
+        member.updatePassword(passwordUpdateRequest.newPassword());
     }
 }

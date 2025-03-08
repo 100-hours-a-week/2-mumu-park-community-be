@@ -5,6 +5,7 @@ import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.util.SessionUtil;
 import com.kaboot.community.member.dto.MemberInfo;
 import com.kaboot.community.member.dto.request.ModifyRequest;
+import com.kaboot.community.member.dto.request.PasswordUpdateRequest;
 import com.kaboot.community.member.dto.response.ExistResponse;
 import com.kaboot.community.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,13 +50,23 @@ public class MemberController {
         return ResponseEntity.ok(ApiResponse.createSuccess(new ExistResponse(isDuplicate), CustomResponseStatus.SUCCESS));
     }
 
-    @PatchMapping("/users")
+    @PatchMapping("")
     public ResponseEntity<ApiResponse<Void>> updateMember(
             HttpServletRequest request,
             @RequestBody ModifyRequest modifyRequest
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUserEmail(request);
         memberService.update(loggedInUserEmail, modifyRequest);
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<ApiResponse<Void>> updateMember(
+            HttpServletRequest request,
+            @RequestBody PasswordUpdateRequest passwordUpdateRequest
+    ) {
+        String loggedInUserEmail = SessionUtil.getLoggedInUserEmail(request);
+        memberService.updatePassword(loggedInUserEmail, passwordUpdateRequest);
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 }

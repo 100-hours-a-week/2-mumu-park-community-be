@@ -6,6 +6,8 @@ import com.kaboot.community.member.dto.request.ModifyRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Builder
@@ -31,5 +33,13 @@ public class Member extends BaseEntity {
     public void update(ModifyRequest modifyRequest) {
         this.nickname = modifyRequest.nickname();
         this.profileImgUrl = modifyRequest.profileImg();
+    }
+
+    public boolean isSamePassword(String checkPassword) {
+        return Objects.equals(password, checkPassword);
+    }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
     }
 }
