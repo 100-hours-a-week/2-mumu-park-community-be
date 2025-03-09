@@ -3,6 +3,7 @@ package com.kaboot.community.board.controller;
 import com.kaboot.community.board.dto.request.CommentPostOrModifyRequest;
 import com.kaboot.community.board.dto.request.LikeRequest;
 import com.kaboot.community.board.dto.request.PostOrModifyRequest;
+import com.kaboot.community.board.dto.response.BoardDetailResponse;
 import com.kaboot.community.board.service.BoardService;
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
@@ -17,6 +18,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<ApiResponse<BoardDetailResponse>> getBoardDetail(
+            @PathVariable Long boardId
+    ) {
+        BoardDetailResponse response = boardService.getBoardDetail(boardId);
+
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
+    }
 
     @PostMapping()
     public ResponseEntity<ApiResponse<Void>> post(
