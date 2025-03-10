@@ -7,18 +7,23 @@ import java.util.List;
 
 @Builder
 public record BoardDetailResponse(
-        Long boardId,
-        String title,
-        String content,
-        String imgFileName,
-        String contentImg,
-        String authorProfileImg,
-        LocalDateTime createdAt,
-        Integer likeCnt,
-        Integer commentCnt,
-        Integer viewCnt,
+        BoardDetail boardDetail,
         List<Comments> comments
 ) {
+    @Builder
+    public record BoardDetail(
+            Long boardId,
+            String title,
+            String content,
+            String imgFileName,
+            String contentImg,
+            String authorProfileImg,
+            LocalDateTime createdAt,
+            Integer likeCnt,
+            Integer commentCnt,
+            Integer viewCount
+    ) {}
+
     @Builder
     public record Comments(
             Long authorId,

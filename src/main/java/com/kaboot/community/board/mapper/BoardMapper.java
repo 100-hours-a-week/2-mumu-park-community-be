@@ -22,16 +22,21 @@ public class BoardMapper {
 
     public static BoardDetailResponse toBoardDetailDto(Board board, Member author, List<BoardDetailResponse.Comments> comments, Integer likesCount) {
         return BoardDetailResponse.builder()
-                .boardId(board.getId())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .imgFileName(board.getImageOriginalName())
-                .contentImg(board.getImgUrl())
-                .authorProfileImg(author.getProfileImgUrl())
-                .createdAt(board.getCreatedAt())
-                .likeCnt(likesCount)
-                .commentCnt(comments.size())
-                .viewCnt(board.getViewCount())
+                .boardDetail(
+                        new BoardDetailResponse.BoardDetail(
+                                board.getId(),
+                                board.getTitle(),
+                                board.getContent(),
+                                board.getImageOriginalName(),
+                                board.getImgUrl(),
+                                author.getProfileImgUrl(),
+                                board.getCreatedAt(),
+                                likesCount,
+                                comments.size(),
+                                board.getViewCount()
+                        )
+
+                )
                 .comments(comments)
                 .build();
     }

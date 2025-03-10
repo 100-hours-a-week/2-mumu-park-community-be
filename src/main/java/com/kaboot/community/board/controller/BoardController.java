@@ -44,7 +44,7 @@ public class BoardController {
             @RequestBody PostOrModifyRequest postRequest
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardService.post(loggedInUserEmail, postRequest);
+        boardService.postBoard(loggedInUserEmail, postRequest);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }

@@ -18,59 +18,46 @@ import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.exception.CustomException;
 import com.kaboot.community.member.entity.Member;
 import com.kaboot.community.member.repository.MemberRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.kaboot.community.board.dto.response.BoardsResponse.*;
 
 @Service
 @RequiredArgsConstructor
 public class BoardService {
-    private static final Integer DEFAULT_PAGE_SIZE = 2;
+    private static final Integer DEFAULT_PAGE_SIZE = 3;
 
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final LikesRepository likesRepository;
     private final CommentRepository commentRepository;
 
-    @Transactional()
+    @Transactional(readOnly = true)
     public BoardsResponse getBoards(Long cursor) {
-        // Cursor 기반 QueryDSL 호출
-        List<BoardsResponse.BoardSimpleInfo> boardSimpleInfos = boardRepository.getBoardSimpleInfo(cursor, DEFAULT_PAGE_SIZE);
+        List<BoardSimpleInfo> boardSimpleInfos = boardRepository.getBoardSimpleInfo(cursor, DEFAULT_PAGE_SIZE);
 
-        // 다음 cursor 설정 (더 이상 데이터가 없으면 null)
         Long nextCursor = boardSimpleInfos.isEmpty()
                 ? null
-                : boardSimpleInfos.get(boardSimpleInfos.size() - 1).boardId();
+                : boardSimpleInfos.getLast().boardId();
 
         return new BoardsResponse(boardSimpleInfos, nextCursor);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public BoardDetailResponse getBoardDetail(Long boardId) {
-        // Todo : join을 이용해서 한번에 쓱 가져오는거로 변경.
         Board board = getBoardById(boardId);
-        Member member = getMemberById(board.getMemberId());
-        Integer likesCount = likesRepository.countLikesByBoardId(board.getId());
-        List<Comment> boardComments = commentRepository.findCommentsByBoardId(board.getId());
 
-        List<BoardDetailResponse.Comments> comments = new ArrayList<>();
-        for (Comment boardComment : boardComments) {
-            Long commentWriterId = boardComment.getMemberId();
-
-            Member writer = getMemberById(commentWriterId);
-            comments.add(CommentMapper.toCommentsDto(writer, boardComment));
-        }
-
-        return BoardMapper.toBoardDetailDto(board, member, comments, likesCount);
+        return boardRepository.getBoardDetailInfoById(board.getId());
     }
 
     @Transactional
-    public void post(String username, PostOrModifyRequest postRequest) {
+    public void postBoard(String username, PostOrModifyRequest postRequest) {
         Member member = getMemberByUsername(username);
         Board board = BoardMapper.toBoardFromPostRequest(postRequest, member.getId());
 
@@ -154,11 +141,6 @@ public class BoardService {
 
     private Member getMemberByUsername(String username) {
         return memberRepository.findByUsername(username)
-                .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
-    }
-
-    private Member getMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
     }
 
