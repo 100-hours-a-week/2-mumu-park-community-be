@@ -41,4 +41,9 @@ public class MemberQueryServiceImpl implements MemberQueryService {
         return memberRepository.existsByNickname(nickname);
     }
 
+    @Override
+    public Member getMemberByUsername(String username) {
+        return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
+    }
 }

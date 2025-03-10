@@ -5,7 +5,8 @@ import com.kaboot.community.board.dto.request.LikeRequest;
 import com.kaboot.community.board.dto.request.PostOrModifyRequest;
 import com.kaboot.community.board.dto.response.BoardDetailResponse;
 import com.kaboot.community.board.dto.response.BoardsResponse;
-import com.kaboot.community.board.service.BoardService;
+import com.kaboot.community.board.service.BoardCommandService;
+import com.kaboot.community.board.service.BoardQueryService;
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.util.SessionUtil;
@@ -18,13 +19,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/boards")
 @RequiredArgsConstructor
 public class BoardController {
-    private final BoardService boardService;
+    private final BoardQueryService boardQueryService;
+    private final BoardCommandService boardCommandService;
 
     @GetMapping()
     public ResponseEntity<ApiResponse<BoardsResponse>> getBoards(
             @RequestParam(value = "cursor", required = false) Long cursor
     ) {
-        BoardsResponse response = boardService.getBoards(cursor);
+        BoardsResponse response = boardQueryService.getBoards(cursor);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
     }
@@ -33,7 +35,7 @@ public class BoardController {
     public ResponseEntity<ApiResponse<BoardDetailResponse>> getBoardDetail(
             @PathVariable Long boardId
     ) {
-        BoardDetailResponse response = boardService.getBoardDetail(boardId);
+        BoardDetailResponse response = boardQueryService.getBoardDetail(boardId);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
     }
@@ -44,7 +46,7 @@ public class BoardController {
             @RequestBody PostOrModifyRequest postRequest
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardService.postBoard(loggedInUserEmail, postRequest);
+        boardCommandService.postBoard(loggedInUserEmail, postRequest);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
@@ -56,7 +58,7 @@ public class BoardController {
             @PathVariable Long boardId
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardService.modifyBoard(loggedInUserEmail, modifyRequest, boardId);
+        boardCommandService.modifyBoard(loggedInUserEmail, modifyRequest, boardId);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
@@ -67,7 +69,7 @@ public class BoardController {
             @PathVariable Long boardId
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardService.deleteBoard(loggedInUserEmail, boardId);
+        boardCommandService.deleteBoard(loggedInUserEmail, boardId);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
@@ -79,7 +81,7 @@ public class BoardController {
             @RequestBody LikeRequest likeRequest
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardService.toggleLike(loggedInUserEmail, boardId, likeRequest);
+        boardCommandService.toggleLike(loggedInUserEmail, boardId, likeRequest);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
@@ -91,7 +93,7 @@ public class BoardController {
             @RequestBody CommentPostOrModifyRequest commentPostRequest
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardService.postComment(loggedInUserEmail, boardId, commentPostRequest);
+        boardCommandService.postComment(loggedInUserEmail, boardId, commentPostRequest);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
@@ -103,7 +105,7 @@ public class BoardController {
             @RequestBody CommentPostOrModifyRequest commentModifyRequest
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardService.modifyComment(loggedInUserEmail, commentId, commentModifyRequest);
+        boardCommandService.modifyComment(loggedInUserEmail, commentId, commentModifyRequest);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
@@ -114,7 +116,7 @@ public class BoardController {
             @PathVariable Long commentId
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardService.deleteComment(loggedInUserEmail, commentId);
+        boardCommandService.deleteComment(loggedInUserEmail, commentId);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
