@@ -4,6 +4,7 @@ import com.kaboot.community.board.dto.request.CommentPostOrModifyRequest;
 import com.kaboot.community.board.dto.request.LikeRequest;
 import com.kaboot.community.board.dto.request.PostOrModifyRequest;
 import com.kaboot.community.board.dto.response.BoardDetailResponse;
+import com.kaboot.community.board.dto.response.BoardsResponse;
 import com.kaboot.community.board.service.BoardService;
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
@@ -18,6 +19,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+
+    @GetMapping()
+    public ResponseEntity<ApiResponse<BoardsResponse>> getBoards(
+            @RequestParam(value = "cursor", required = false) Long cursor
+    ) {
+        BoardsResponse response = boardService.getBoards(cursor);
+
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
+    }
 
     @GetMapping("/{boardId}")
     public ResponseEntity<ApiResponse<BoardDetailResponse>> getBoardDetail(

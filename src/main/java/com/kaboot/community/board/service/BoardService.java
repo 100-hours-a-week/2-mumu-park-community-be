@@ -4,6 +4,7 @@ import com.kaboot.community.board.dto.request.CommentPostOrModifyRequest;
 import com.kaboot.community.board.dto.request.LikeRequest;
 import com.kaboot.community.board.dto.request.PostOrModifyRequest;
 import com.kaboot.community.board.dto.response.BoardDetailResponse;
+import com.kaboot.community.board.dto.response.BoardsResponse;
 import com.kaboot.community.board.entity.Board;
 import com.kaboot.community.board.entity.Comment;
 import com.kaboot.community.board.entity.Likes;
@@ -29,10 +30,25 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class BoardService {
+    private static final Integer DEFAULT_PAGE_SIZE = 2;
+
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final LikesRepository likesRepository;
     private final CommentRepository commentRepository;
+
+    @Transactional()
+    public BoardsResponse getBoards(Long cursor) {
+        // Cursor 기반 QueryDSL 호출
+        List<BoardsResponse.BoardSimpleInfo> boardSimpleInfos = boardRepository.getBoardSimpleInfo(cursor, DEFAULT_PAGE_SIZE);
+
+        // 다음 cursor 설정 (더 이상 데이터가 없으면 null)
+        Long nextCursor = boardSimpleInfos.isEmpty()
+                ? null
+                : boardSimpleInfos.get(boardSimpleInfos.size() - 1).boardId();
+
+        return new BoardsResponse(boardSimpleInfos, nextCursor);
+    }
 
     @Transactional
     public BoardDetailResponse getBoardDetail(Long boardId) {
