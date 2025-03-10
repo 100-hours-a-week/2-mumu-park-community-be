@@ -7,7 +7,8 @@ import com.kaboot.community.member.dto.request.ModifyRequest;
 import com.kaboot.community.member.dto.request.PasswordUpdateRequest;
 import com.kaboot.community.member.dto.response.ExistResponse;
 import com.kaboot.community.member.dto.response.MemberInfoResponse;
-import com.kaboot.community.member.service.MemberService;
+import com.kaboot.community.member.service.MemberCommandService;
+import com.kaboot.community.member.service.MemberQueryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +18,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class MemberController {
-    private final MemberService memberService;
+    private final MemberQueryService memberQueryService;
+    private final MemberCommandService memberCommandService;
 
     @GetMapping("/email")
     public ResponseEntity<ApiResponse<ExistResponse>> checkEmailDuplicate(@RequestParam String email) {
-        boolean isDuplicate = memberService.isEmailDuplicate(email);
+        boolean isDuplicate = memberQueryService.isEmailDuplicate(email);
+
         return ResponseEntity.ok(ApiResponse.createSuccess(new ExistResponse(isDuplicate), CustomResponseStatus.SUCCESS));
     }
 
     @GetMapping("/nickname")
     public ResponseEntity<ApiResponse<ExistResponse>> checkNicknameDuplicate(@RequestParam String nickname) {
-        boolean isDuplicate = memberService.isNicknameDuplicate(nickname);
+        boolean isDuplicate = memberQueryService.isNicknameDuplicate(nickname);
         return ResponseEntity.ok(ApiResponse.createSuccess(new ExistResponse(isDuplicate), CustomResponseStatus.SUCCESS));
     }
 
@@ -35,17 +38,18 @@ public class MemberController {
     public ResponseEntity<ApiResponse<MemberInfoResponse>> getMemberInfo(
             @PathVariable Long id
     ) {
-        MemberInfoResponse response = memberService.getMemberInfoById(id);
+        MemberInfoResponse response = memberQueryService.getMemberInfoById(id);
         return ResponseEntity.ok(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
     }
 
-    @PatchMapping("")
+    @PatchMapping()
     public ResponseEntity<ApiResponse<Void>> updateMember(
             HttpServletRequest request,
             @RequestBody ModifyRequest modifyRequest
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        memberService.update(loggedInUserEmail, modifyRequest);
+        memberCommandService.update(loggedInUserEmail, modifyRequest);
+
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 
@@ -55,7 +59,8 @@ public class MemberController {
             @RequestBody PasswordUpdateRequest passwordUpdateRequest
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        memberService.updatePassword(loggedInUserEmail, passwordUpdateRequest);
+        memberCommandService.updatePassword(loggedInUserEmail, passwordUpdateRequest);
+
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 }

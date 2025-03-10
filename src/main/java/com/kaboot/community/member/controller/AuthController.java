@@ -6,7 +6,7 @@ import com.kaboot.community.common.exception.CustomException;
 import com.kaboot.community.common.util.SessionUtil;
 import com.kaboot.community.member.dto.request.LoginRequest;
 import com.kaboot.community.member.dto.request.RegisterRequest;
-import com.kaboot.community.member.service.MemberService;
+import com.kaboot.community.member.service.MemberCommandService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final MemberService memberService;
+    private final MemberCommandService memberCommandService;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<Void>> register(@RequestBody RegisterRequest registerRequest) {
-        memberService.register(registerRequest);
+        memberCommandService.register(registerRequest);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
@@ -30,19 +30,19 @@ public class AuthController {
             HttpServletRequest request,
             @RequestBody LoginRequest loginRequest
     ) {
-        memberService.login(loginRequest);
+        memberCommandService.login(loginRequest);
 
         SessionUtil.setLoggedInUser(request, loginRequest.email());
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> login(
+    public ResponseEntity<ApiResponse<Void>> logout(
             HttpServletRequest request
     ) {
         String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
 
-        if (loggedInUserEmail == null) { // 세션에 저장된 로그인 정보가 없으면 로그아웃 불가
+        if (loggedInUserEmail == null) {
             throw new CustomException(CustomResponseStatus.INVALID_REQUEST);
         }
 
