@@ -1,6 +1,5 @@
 package com.kaboot.community.member.repository;
 
-import com.kaboot.community.member.dto.response.MemberInfoResponse;
 import com.kaboot.community.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 

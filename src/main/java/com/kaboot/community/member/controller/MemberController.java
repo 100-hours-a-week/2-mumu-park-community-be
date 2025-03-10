@@ -47,8 +47,8 @@ public class MemberController {
             HttpServletRequest request,
             @RequestBody ModifyRequest modifyRequest
     ) {
-        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        memberCommandService.update(loggedInUserEmail, modifyRequest);
+        String loggedInUsername = SessionUtil.getLoggedInUsername(request);
+        memberCommandService.update(loggedInUsername, modifyRequest);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
@@ -58,8 +58,8 @@ public class MemberController {
             HttpServletRequest request,
             @RequestBody PasswordUpdateRequest passwordUpdateRequest
     ) {
-        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        memberCommandService.updatePassword(loggedInUserEmail, passwordUpdateRequest);
+        String loggedInUsername = SessionUtil.getLoggedInUsername(request);
+        memberCommandService.updatePassword(loggedInUsername, passwordUpdateRequest);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }

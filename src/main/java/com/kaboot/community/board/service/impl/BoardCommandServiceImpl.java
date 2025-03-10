@@ -1,4 +1,4 @@
-package com.kaboot.community.board.service;
+package com.kaboot.community.board.service.impl;
 
 import com.kaboot.community.board.dto.request.CommentPostOrModifyRequest;
 import com.kaboot.community.board.dto.request.LikeRequest;
@@ -9,9 +9,11 @@ import com.kaboot.community.board.entity.Likes;
 import com.kaboot.community.board.mapper.BoardMapper;
 import com.kaboot.community.board.mapper.CommentMapper;
 import com.kaboot.community.board.mapper.LikesMapper;
-import com.kaboot.community.board.repository.CommentRepository;
-import com.kaboot.community.board.repository.LikesRepository;
+import com.kaboot.community.board.repository.comment.CommentRepository;
+import com.kaboot.community.board.repository.likes.LikesRepository;
 import com.kaboot.community.board.repository.board.BoardRepository;
+import com.kaboot.community.board.service.BoardCommandService;
+import com.kaboot.community.board.service.BoardQueryService;
 import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.exception.CustomException;
 import com.kaboot.community.member.entity.Member;

@@ -1,11 +1,12 @@
-package com.kaboot.community.board.service;
+package com.kaboot.community.board.service.impl;
 
 import com.kaboot.community.board.dto.response.BoardDetailResponse;
 import com.kaboot.community.board.dto.response.BoardsResponse;
 import com.kaboot.community.board.entity.Board;
 import com.kaboot.community.board.entity.Comment;
-import com.kaboot.community.board.repository.CommentRepository;
+import com.kaboot.community.board.repository.comment.CommentRepository;
 import com.kaboot.community.board.repository.board.BoardRepository;
+import com.kaboot.community.board.service.BoardQueryService;
 import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BoardQueryServiceImpl implements BoardQueryService{
+public class BoardQueryServiceImpl implements BoardQueryService {
     private static final Integer DEFAULT_PAGE_SIZE = 3;
 
     private final BoardRepository boardRepository;

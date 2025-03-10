@@ -1,4 +1,4 @@
-package com.kaboot.community.board.repository;
+package com.kaboot.community.board.repository.likes;
 
 import com.kaboot.community.board.entity.Likes;
 import org.springframework.data.jpa.repository.JpaRepository;

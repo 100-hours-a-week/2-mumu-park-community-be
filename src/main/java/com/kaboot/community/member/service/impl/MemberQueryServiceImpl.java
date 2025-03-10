@@ -4,7 +4,6 @@ import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.exception.CustomException;
 import com.kaboot.community.member.dto.response.MemberInfoResponse;
 import com.kaboot.community.member.entity.Member;
-import com.kaboot.community.member.repository.MemberJdbcRepository;
 import com.kaboot.community.member.repository.MemberRepository;
 import com.kaboot.community.member.service.MemberQueryService;
 import lombok.RequiredArgsConstructor;
