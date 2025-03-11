@@ -4,6 +4,7 @@ import com.kaboot.community.board.dto.request.CommentPostOrModifyRequest;
 import com.kaboot.community.common.entity.BaseEntity;
 import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.exception.CustomException;
+import com.kaboot.community.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
@@ -22,15 +23,19 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long memberId;
+    @ManyToOne()
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    private Long boardId;
+    @ManyToOne()
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     @Column(columnDefinition = "TEXT")
     private String content;
 
     public void validateSameMember(Long accessMemberId) {
-        if (!Objects.equals(memberId, accessMemberId)) {
+        if (!Objects.equals(member.getId(), accessMemberId)) {
             throw new CustomException(CustomResponseStatus.UNAUTHORIZED_REQUEST);
         }
     }
