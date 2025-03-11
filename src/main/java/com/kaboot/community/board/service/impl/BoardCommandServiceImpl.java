@@ -44,33 +44,33 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     public void modifyBoard(String username, PostOrModifyRequest modifyRequest, Long boardId) {
         Member member = getMemberByUsername(username);
-        Board board = getBoardById(boardId);
+        Board validBoard = getBoardById(boardId);
 
-        board.validateSameMember(member.getId());
-        board.update(modifyRequest);
+        validBoard.validateSameMember(member.getId());
+        validBoard.update(modifyRequest);
     }
 
     public void deleteBoard(String username,  Long boardId) {
         Member member = getMemberByUsername(username);
-        Board board = getBoardById(boardId);
+        Board validBoard = getBoardById(boardId);
 
-        board.validateSameMember(member.getId());
-        boardRepository.delete(board);
+        validBoard.validateSameMember(member.getId());
+        boardRepository.delete(validBoard);
     }
 
     public void toggleLike(String username, Long boardId, LikeRequest likeRequest) {
         Member member = getMemberByUsername(username);
-        Board board = getBoardById(boardId);
+        Board validBoard = getBoardById(boardId);
 
-        Long existBoardID = board.getId();
+        Long validBoardId = validBoard.getId();
         Long memberId = member.getId();
 
         if (!likeRequest.isLikeCancel()) {
-            likesRepository.save(LikesMapper.toLikes(board.getId(), member.getId()));
+            likesRepository.save(LikesMapper.toLikes(validBoardId, member.getId()));
             return;
         }
 
-        Likes likes = likesRepository.findByBoardIdAndMemberId(existBoardID, memberId)
+        Likes likes = likesRepository.findByBoardIdAndMemberId(validBoardId, memberId)
                 .orElseThrow(() -> new CustomException(CustomResponseStatus.LIKES_NOT_EXIST));
 
         likesRepository.delete(likes);
@@ -78,25 +78,25 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     public void postComment(String username, Long boardId, CommentPostOrModifyRequest commentPostRequest) {
         Member member = getMemberByUsername(username);
-        Board board = getBoardById(boardId);
+        Board validBoard = getBoardById(boardId);
 
-        commentRepository.save(CommentMapper.toEntity(board.getId(), member.getId(), commentPostRequest));
+        commentRepository.save(CommentMapper.toEntity(validBoard.getId(), member.getId(), commentPostRequest));
     }
 
     public void modifyComment(String username, Long commentId, CommentPostOrModifyRequest commentModifyRequest) {
         Member member = getMemberByUsername(username);
-        Comment comment = getCommentById(commentId);
+        Comment validComment = getCommentById(commentId);
 
-        comment.validateSameMember(member.getId());
-        comment.updateComment(commentModifyRequest);
+        validComment.validateSameMember(member.getId());
+        validComment.updateComment(commentModifyRequest);
     }
 
     public void deleteComment(String username, Long commentId) {
         Member member = getMemberByUsername(username);
-        Comment comment = getCommentById(commentId);
+        Comment validComment = getCommentById(commentId);
 
-        comment.validateSameMember(member.getId());
-        comment.delete(LocalDateTime.now());
+        validComment.validateSameMember(member.getId());
+        validComment.delete(LocalDateTime.now());
     }
 
     private Member getMemberByUsername(String username) {
