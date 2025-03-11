@@ -1,9 +1,7 @@
 package com.kaboot.community.board.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.kaboot.community.member.entity.Member;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -15,7 +13,11 @@ public class Likes {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long memberId;
+    @ManyToOne()
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    private Long boardId;
+    @ManyToOne()
+    @JoinColumn(name = "board_id")
+    private Board board;
 }

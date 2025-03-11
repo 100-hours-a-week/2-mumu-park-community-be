@@ -42,18 +42,18 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         board.createdAt,
                         JPAExpressions.select(likes.id.count().intValue())
                                 .from(likes)
-                                .where(likes.boardId.eq(board.id)),
+                                .where(likes.board.id.eq(board.id)),
                         JPAExpressions.select(comment.id.count().intValue())
                                 .from(comment)
-                                .where(comment.boardId.eq(board.id)),
+                                .where(comment.board.id.eq(board.id)),
                         board.viewCount,
                         member.nickname.as("authorNickname"),
                         member.profileImgUrl.as("authorProfileImg")
                 ))
                 .from(board)
-                .leftJoin(member).on(board.memberId.eq(member.id))
-                .leftJoin(likes).on(board.id.eq(likes.boardId))
-                .leftJoin(comment).on(board.id.eq(comment.boardId))
+                .leftJoin(member).on(board.member.id.eq(member.id))
+                .leftJoin(likes).on(board.id.eq(likes.board.id))
+                .leftJoin(comment).on(board.id.eq(comment.board.id))
                 .groupBy(board.id, member.nickname, member.profileImgUrl)
                 .where(cursor == null ? null : board.id.lt(cursor))
                 .orderBy(board.id.desc())
@@ -65,15 +65,15 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
         return jpaQueryFactory
                 .select(Projections.constructor(
                         Comments.class,
-                        comment.memberId.as("authorId"),
+                        comment.member.id.as("authorId"),
                         member.profileImgUrl.as("profileImg"),
                         member.nickname,
                         comment.modifiedAt.as("updatedAt"),
                         comment.content
                 ))
                 .from(comment)
-                .leftJoin(member).on(comment.memberId.eq(member.id))
-                .where(comment.boardId.eq(boardId))
+                .leftJoin(member).on(comment.member.id.eq(member.id))
+                .where(comment.board.id.eq(boardId))
                 .fetch();
     }
 
@@ -90,14 +90,14 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         board.createdAt,
                         JPAExpressions.select(likes.id.count().intValue())
                                 .from(likes)
-                                .where(likes.boardId.eq(boardId)),
+                                .where(likes.board.id.eq(boardId)),
                         JPAExpressions.select(comment.count().intValue())
                                 .from(comment)
-                                .where(comment.boardId.eq(boardId)),
+                                .where(comment.board.id.eq(boardId)),
                         board.viewCount
                 ))
                 .from(board)
-                .leftJoin(member).on(board.memberId.eq(member.id))
+                .leftJoin(member).on(board.member.id.eq(member.id))
                 .where(board.id.eq(boardId))
                 .fetchOne();
     }

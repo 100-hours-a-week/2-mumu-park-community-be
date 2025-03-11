@@ -37,7 +37,7 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     public void postBoard(String username, PostOrModifyRequest postRequest) {
         Member member = getMemberByUsername(username);
-        Board board = BoardMapper.toBoardFromPostRequest(postRequest, member.getId());
+        Board board = BoardMapper.toBoardFromPostRequest(postRequest, member);
 
         boardRepository.save(board);
     }
@@ -66,7 +66,7 @@ public class BoardCommandServiceImpl implements BoardCommandService {
         Long memberId = member.getId();
 
         if (!likeRequest.isLikeCancel()) {
-            likesRepository.save(LikesMapper.toLikes(validBoardId, member.getId()));
+            likesRepository.save(LikesMapper.toLikes(validBoard, member));
             return;
         }
 
@@ -80,7 +80,7 @@ public class BoardCommandServiceImpl implements BoardCommandService {
         Member member = getMemberByUsername(username);
         Board validBoard = getBoardById(boardId);
 
-        commentRepository.save(CommentMapper.toEntity(validBoard.getId(), member.getId(), commentPostRequest));
+        commentRepository.save(CommentMapper.toEntity(validBoard, member, commentPostRequest));
     }
 
     public void modifyComment(String username, Long commentId, CommentPostOrModifyRequest commentModifyRequest) {
