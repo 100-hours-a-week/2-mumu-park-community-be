@@ -63,4 +63,14 @@ public class MemberController {
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> updateMember(
+            HttpServletRequest request
+    ) {
+        String loggedInUsername = SessionUtil.getLoggedInUsername(request);
+        memberCommandService.withdrawal(loggedInUsername);
+
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+    }
 }

@@ -13,4 +13,6 @@ public interface MemberCommandService {
     void update(String userEmail, ModifyRequest modifyRequest);
 
     void updatePassword(String userEmail, PasswordUpdateRequest passwordUpdateRequest);
+
+    void withdrawal(String loggedInUsername);
 }

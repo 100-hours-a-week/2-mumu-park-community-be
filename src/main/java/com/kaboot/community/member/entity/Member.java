@@ -5,7 +5,9 @@ import com.kaboot.community.common.entity.BaseEntity;
 import com.kaboot.community.member.dto.request.ModifyRequest;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -13,6 +15,7 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@SQLRestriction("deleted_at is NULL")
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +44,9 @@ public class Member extends BaseEntity {
 
     public void updatePassword(String newPassword) {
         this.password = newPassword;
+    }
+
+    public void withdrawal(LocalDateTime now) {
+        this.deletedAt = now;
     }
 }

@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -61,5 +62,13 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         }
 
         member.updatePassword(passwordUpdateRequest.newPassword());
+    }
+
+    @Override
+    public void withdrawal(String loggedInUsername) {
+        Member member = memberRepository.findByUsername(loggedInUsername)
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
+
+        member.withdrawal(LocalDateTime.now());
     }
 }
