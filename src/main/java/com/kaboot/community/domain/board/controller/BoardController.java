@@ -1,5 +1,6 @@
 package com.kaboot.community.domain.board.controller;
 
+import com.kaboot.community.config.security.member.PrincipalDetails;
 import com.kaboot.community.domain.board.dto.request.CommentPostOrModifyRequest;
 import com.kaboot.community.domain.board.dto.request.LikeRequest;
 import com.kaboot.community.domain.board.dto.request.PostOrModifyRequest;
@@ -9,10 +10,9 @@ import com.kaboot.community.domain.board.service.BoardCommandService;
 import com.kaboot.community.domain.board.service.BoardQueryService;
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
-import com.kaboot.community.common.util.SessionUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,82 +42,98 @@ public class BoardController {
 
     @PostMapping()
     public ResponseEntity<ApiResponse<Void>> post(
-            HttpServletRequest request,
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody PostOrModifyRequest postRequest
     ) {
-        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        System.out.println("loggedInUserEmail = " + loggedInUserEmail);
-        boardCommandService.postBoard(loggedInUserEmail, postRequest);
+        boardCommandService.postBoard(
+                principalDetails.getUsername(),
+                postRequest
+        );
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 
     @PatchMapping("/{boardId}")
     public ResponseEntity<ApiResponse<Void>> modifyBoard(
-            HttpServletRequest request,
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody PostOrModifyRequest modifyRequest,
             @PathVariable Long boardId
     ) {
-        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardCommandService.modifyBoard(loggedInUserEmail, modifyRequest, boardId);
+        boardCommandService.modifyBoard(
+                principalDetails.getUsername(),
+                modifyRequest,
+                boardId
+        );
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 
     @DeleteMapping("/{boardId}")
-    public ResponseEntity<ApiResponse<Void>> modifyBoard(
-            HttpServletRequest request,
+    public ResponseEntity<ApiResponse<Void>> deleteBoard(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long boardId
     ) {
-        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardCommandService.deleteBoard(loggedInUserEmail, boardId);
+        boardCommandService.deleteBoard(
+                principalDetails.getUsername(),
+                boardId
+        );
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 
-    @PostMapping("/{boardId}/likes")
+    @PatchMapping("/{boardId}/likes")
     public ResponseEntity<ApiResponse<Void>> toggleLike(
-            HttpServletRequest request,
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long boardId,
             @RequestBody LikeRequest likeRequest
     ) {
-        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardCommandService.toggleLike(loggedInUserEmail, boardId, likeRequest);
+        boardCommandService.toggleLike(
+                principalDetails.getUsername(),
+                boardId, likeRequest
+        );
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 
     @PostMapping("/{boardId}/comments")
     public ResponseEntity<ApiResponse<Void>> postComment(
-            HttpServletRequest request,
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long boardId,
             @RequestBody CommentPostOrModifyRequest commentPostRequest
     ) {
-        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardCommandService.postComment(loggedInUserEmail, boardId, commentPostRequest);
+        boardCommandService.postComment(
+                principalDetails.getUsername(),
+                boardId,
+                commentPostRequest
+        );
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 
     @PatchMapping("/comments/{commentId}")
     public ResponseEntity<ApiResponse<Void>> modifyComment(
-            HttpServletRequest request,
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long commentId,
             @RequestBody CommentPostOrModifyRequest commentModifyRequest
     ) {
-        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardCommandService.modifyComment(loggedInUserEmail, commentId, commentModifyRequest);
+        boardCommandService.modifyComment(
+                principalDetails.getUsername(),
+                commentId,
+                commentModifyRequest
+        );
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<ApiResponse<Void>> deleteComment(
-            HttpServletRequest request,
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long commentId
     ) {
-        String loggedInUserEmail = SessionUtil.getLoggedInUsername(request);
-        boardCommandService.deleteComment(loggedInUserEmail, commentId);
+        boardCommandService.deleteComment(
+                principalDetails.getUsername(),
+                commentId
+        );
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }

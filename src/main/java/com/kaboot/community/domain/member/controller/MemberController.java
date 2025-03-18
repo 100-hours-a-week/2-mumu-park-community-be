@@ -2,7 +2,6 @@ package com.kaboot.community.domain.member.controller;
 
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
-import com.kaboot.community.common.util.SessionUtil;
 import com.kaboot.community.config.security.member.PrincipalDetails;
 import com.kaboot.community.domain.member.dto.request.ModifyRequest;
 import com.kaboot.community.domain.member.dto.request.PasswordUpdateRequest;
@@ -10,7 +9,6 @@ import com.kaboot.community.domain.member.dto.response.ExistResponse;
 import com.kaboot.community.domain.member.dto.response.MemberInfoResponse;
 import com.kaboot.community.domain.member.service.MemberCommandService;
 import com.kaboot.community.domain.member.service.MemberQueryService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
