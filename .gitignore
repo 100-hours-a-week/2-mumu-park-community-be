@@ -1,14 +1,11 @@
-# 프로젝트 문서 허용
-HELP.md
-
-# Gradle 관련 파일 무시
+### 빌드 결과물 ###
 .gradle
-build/**                 # 전체 build 폴더 무시
+build/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/   # src/main 내부의 build 폴더는 추적
-!**/src/test/**/build/   # src/test 내부의 build 폴더는 추적
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# Spring Tool Suite(STS) 관련 파일 무시
+### STS ###
 .apt_generated
 .classpath
 .factorypath
@@ -16,26 +13,70 @@ build/**                 # 전체 build 폴더 무시
 .settings
 .springBeans
 .sts4-cache
-bin/**                   # 전체 bin 폴더 무시
-!**/src/main/**/bin/     # src/main 내부의 bin 폴더는 추적
-!**/src/test/**/bin/     # src/test 내부의 bin 폴더는 추적
-*.yml
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
 
-# IntelliJ IDEA 관련 파일 무시
+### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
-out/**                   # 전체 out 폴더 무시
-!**/src/main/**/out/     # src/main 내부의 out 폴더는 추적
-!**/src/test/**/out/     # src/test 내부의 out 폴더는 추적
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
-# NetBeans 관련 파일 무시
+### NetBeans ###
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
 
-# VS Code 관련 파일 무시
+### VS Code ###
 .vscode/
+
+### 설정 파일 ###
+application.yml
+application-local.yml
+application-prod.yml
+application-dev.yml
+
+### 로그 파일 ###
+logs/
+*.log
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+### 데이터베이스 ###
+*.db
+*.sqlite
+*.sqlite3
+/data/
+
+### OS 생성 파일 ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+### 노드 모듈 (프론트엔드 프로젝트 연동 시) ###
+node_modules/
+npm-debug.log
+yarn-error.log
+
+### 기타 빌드 결과물 ###
+/target/
+*.class
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
