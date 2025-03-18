@@ -8,6 +8,7 @@ import com.kaboot.community.domain.member.entity.Member;
 import com.kaboot.community.domain.member.repository.MemberRepository;
 import com.kaboot.community.domain.member.service.MemberCommandService;
 import com.kaboot.community.domain.member.service.MemberQueryService;
+import com.kaboot.community.util.password.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,11 +39,11 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         Member member = memberRepository.findByUsername(userEmail)
                 .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
 
-        if (!member.isSamePassword(passwordUpdateRequest.prevPassword())) {
+        if (!PasswordUtil.isSamePassword(passwordUpdateRequest.prevPassword(), member.getPassword())) {
             throw new CustomException(CustomResponseStatus.PASSWORD_NOT_MATCH);
         }
 
-        member.updatePassword(passwordUpdateRequest.newPassword());
+        member.updatePassword(PasswordUtil.hashPassword(passwordUpdateRequest.newPassword()));
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.kaboot.community.domain.member.controller;
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.util.SessionUtil;
+import com.kaboot.community.config.security.member.PrincipalDetails;
 import com.kaboot.community.domain.member.dto.request.ModifyRequest;
 import com.kaboot.community.domain.member.dto.request.PasswordUpdateRequest;
 import com.kaboot.community.domain.member.dto.response.ExistResponse;
@@ -12,6 +13,7 @@ import com.kaboot.community.domain.member.service.MemberQueryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,42 +38,37 @@ public class MemberController {
 
     @GetMapping()
     public ResponseEntity<ApiResponse<MemberInfoResponse>> getMemberInfo(
-            HttpServletRequest request
+            @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        String loggedInUsername = SessionUtil.getLoggedInUsername(request);
-        System.out.println("loggedInUsername = " + loggedInUsername);
-        MemberInfoResponse response = memberQueryService.getMemberInfoByUsername(loggedInUsername);
+        MemberInfoResponse response = memberQueryService.getMemberInfoByUsername(principalDetails.getUsername());
         return ResponseEntity.ok(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
     }
 
     @PatchMapping()
     public ResponseEntity<ApiResponse<Void>> updateMember(
-            HttpServletRequest request,
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody ModifyRequest modifyRequest
     ) {
-        String loggedInUsername = SessionUtil.getLoggedInUsername(request);
-        memberCommandService.update(loggedInUsername, modifyRequest);
+        memberCommandService.update(principalDetails.getUsername(), modifyRequest);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<ApiResponse<Void>> updateMember(
-            HttpServletRequest request,
+    public ResponseEntity<ApiResponse<Void>> updatePassword(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody PasswordUpdateRequest passwordUpdateRequest
     ) {
-        String loggedInUsername = SessionUtil.getLoggedInUsername(request);
-        memberCommandService.updatePassword(loggedInUsername, passwordUpdateRequest);
+        memberCommandService.updatePassword(principalDetails.getUsername(), passwordUpdateRequest);
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("비밀번호 변경에 성공하였습니다.")));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> updateMember(
-            HttpServletRequest request
+    @DeleteMapping()
+    public ResponseEntity<ApiResponse<Void>> withdrawal(
+            @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
-        String loggedInUsername = SessionUtil.getLoggedInUsername(request);
-        memberCommandService.withdrawal(loggedInUsername);
+        memberCommandService.withdrawal(principalDetails.getUsername());
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
     }

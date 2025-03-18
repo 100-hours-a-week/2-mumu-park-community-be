@@ -43,10 +43,6 @@ public class Member extends BaseEntity {
         this.profileImgUrl = modifyRequest.profileImg();
     }
 
-    public boolean isSamePassword(String checkPassword) {
-        return Objects.equals(password, checkPassword);
-    }
-
     public void updatePassword(String newPassword) {
         this.password = newPassword;
     }
