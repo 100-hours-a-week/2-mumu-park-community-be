@@ -24,7 +24,9 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Void>> register(@RequestBody RegisterRequest registerRequest) {
         authService.register(registerRequest);
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
+                CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("회원가입이 완료되었습니다."))
+        );
     }
 
     @PostMapping("/tokens")
@@ -32,10 +34,13 @@ public class AuthController {
             HttpServletResponse response,
             @RequestBody LoginRequest loginRequest
     ) {
-        AuthTokens tokens = authService.loginV2(loginRequest);
+        AuthTokens tokens = authService.login(loginRequest);
         setRefreshTokenInCookie(response, tokens.refreshToken());
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccess(LoginResponse.from(tokens.accessToken()), CustomResponseStatus.SUCCESS.withMessage("로그인이 완료되었습니다.")));
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(
+                LoginResponse.from(tokens.accessToken()),
+                CustomResponseStatus.SUCCESS.withMessage("로그인이 완료되었습니다."))
+        );
     }
 
     @PostMapping("/logout")

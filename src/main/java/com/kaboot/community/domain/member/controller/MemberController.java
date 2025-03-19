@@ -25,13 +25,19 @@ public class MemberController {
     public ResponseEntity<ApiResponse<ExistResponse>> checkEmailDuplicate(@RequestParam String email) {
         boolean isDuplicate = memberQueryService.isEmailDuplicate(email);
 
-        return ResponseEntity.ok(ApiResponse.createSuccess(new ExistResponse(isDuplicate), CustomResponseStatus.SUCCESS));
+        return ResponseEntity.ok(ApiResponse.createSuccess(
+                new ExistResponse(isDuplicate),
+                CustomResponseStatus.SUCCESS
+        ));
     }
 
     @GetMapping("/nickname")
     public ResponseEntity<ApiResponse<ExistResponse>> checkNicknameDuplicate(@RequestParam String nickname) {
         boolean isDuplicate = memberQueryService.isNicknameDuplicate(nickname);
-        return ResponseEntity.ok(ApiResponse.createSuccess(new ExistResponse(isDuplicate), CustomResponseStatus.SUCCESS));
+        return ResponseEntity.ok(ApiResponse.createSuccess(
+                new ExistResponse(isDuplicate),
+                CustomResponseStatus.SUCCESS
+        ));
     }
 
     @GetMapping()
@@ -39,7 +45,10 @@ public class MemberController {
             @AuthenticationPrincipal PrincipalDetails principalDetails
     ) {
         MemberInfoResponse response = memberQueryService.getMemberInfoByUsername(principalDetails.getUsername());
-        return ResponseEntity.ok(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
+        return ResponseEntity.ok(ApiResponse.createSuccess(
+                response,
+                CustomResponseStatus.SUCCESS
+        ));
     }
 
     @PatchMapping()
@@ -49,7 +58,9 @@ public class MemberController {
     ) {
         memberCommandService.update(principalDetails.getUsername(), modifyRequest);
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
+                CustomResponseStatus.SUCCESS_WITH_NO_CONTENT
+        ));
     }
 
     @PatchMapping("/password")
@@ -59,7 +70,9 @@ public class MemberController {
     ) {
         memberCommandService.updatePassword(principalDetails.getUsername(), passwordUpdateRequest);
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("비밀번호 변경에 성공하였습니다.")));
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
+                CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("비밀번호 변경에 성공하였습니다.")
+        ));
     }
 
     @DeleteMapping()
@@ -68,6 +81,8 @@ public class MemberController {
     ) {
         memberCommandService.withdrawal(principalDetails.getUsername());
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
+                CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("회원 탈퇴에 성공하였습니다.")
+        ));
     }
 }

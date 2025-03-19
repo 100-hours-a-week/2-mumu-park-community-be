@@ -5,7 +5,6 @@ import com.kaboot.community.common.exception.CustomException;
 import com.kaboot.community.domain.member.dto.request.ModifyRequest;
 import com.kaboot.community.domain.member.dto.request.PasswordUpdateRequest;
 import com.kaboot.community.domain.member.entity.Member;
-import com.kaboot.community.domain.member.repository.MemberRepository;
 import com.kaboot.community.domain.member.service.MemberCommandService;
 import com.kaboot.community.domain.member.service.MemberQueryService;
 import com.kaboot.community.util.password.PasswordUtil;
@@ -20,37 +19,29 @@ import java.time.LocalDateTime;
 @Transactional
 public class MemberCommandServiceImpl implements MemberCommandService {
     private final MemberQueryService memberQueryService;
-    private final MemberRepository memberRepository;
 
     @Override
-    public void update(String userEmail, ModifyRequest modifyRequest) {
-        Member member = memberRepository.findByUsername(userEmail)
-                .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
+    public void update(String authUsername, ModifyRequest modifyRequest) {
+        Member validMember = memberQueryService.getMemberByUsername(authUsername);
 
         if (memberQueryService.isNicknameDuplicate(modifyRequest.nickname())) {
             throw new CustomException(CustomResponseStatus.NICKNAME_ALREADY_EXIST);
         }
 
-        member.update(modifyRequest);
+        validMember.update(modifyRequest);
     }
 
     @Override
-    public void updatePassword(String userEmail, PasswordUpdateRequest passwordUpdateRequest) {
-        Member member = memberRepository.findByUsername(userEmail)
-                .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
+    public void updatePassword(String authUsername, PasswordUpdateRequest passwordUpdateRequest) {
+        Member validMember = memberQueryService.getMemberByUsername(authUsername);
 
-        if (!PasswordUtil.isSamePassword(passwordUpdateRequest.prevPassword(), member.getPassword())) {
-            throw new CustomException(CustomResponseStatus.PASSWORD_NOT_MATCH);
-        }
-
-        member.updatePassword(PasswordUtil.hashPassword(passwordUpdateRequest.newPassword()));
+        validMember.updatePassword(PasswordUtil.hashPassword(passwordUpdateRequest.newPassword()));
     }
 
     @Override
-    public void withdrawal(String loggedInUsername) {
-        Member member = memberRepository.findByUsername(loggedInUsername)
-                .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
+    public void withdrawal(String authUsername) {
+        Member validMember = memberQueryService.getMemberByUsername(authUsername);
 
-        member.withdrawal(LocalDateTime.now());
+        validMember.withdrawal(LocalDateTime.now());
     }
 }

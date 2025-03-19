@@ -35,38 +35,38 @@ public class BoardCommandServiceImpl implements BoardCommandService {
     private final LikesRepository likesRepository;
     private final CommentRepository commentRepository;
 
-    public void postBoard(String username, PostOrModifyRequest postRequest) {
-        Member member = getMemberByUsername(username);
-        Board board = BoardMapper.toBoardFromPostRequest(postRequest, member);
+    public void postBoard(String authUsername, PostOrModifyRequest postRequest) {
+        Member validMember = getMemberByUsername(authUsername);
+        Board board = BoardMapper.toBoardFromPostRequest(postRequest, validMember);
 
         boardRepository.save(board);
     }
 
-    public void modifyBoard(String username, PostOrModifyRequest modifyRequest, Long boardId) {
-        Member member = getMemberByUsername(username);
+    public void modifyBoard(String authUsername, PostOrModifyRequest modifyRequest, Long boardId) {
+        Member validMember = getMemberByUsername(authUsername);
         Board validBoard = getBoardById(boardId);
 
-        validBoard.validateSameMember(member.getId());
+        validBoard.validateSameMember(validMember.getId());
         validBoard.update(modifyRequest);
     }
 
-    public void deleteBoard(String username,  Long boardId) {
-        Member member = getMemberByUsername(username);
+    public void deleteBoard(String authUsername,  Long boardId) {
+        Member validMember = getMemberByUsername(authUsername);
         Board validBoard = getBoardById(boardId);
 
-        validBoard.validateSameMember(member.getId());
+        validBoard.validateSameMember(validMember.getId());
         boardRepository.delete(validBoard);
     }
 
-    public void toggleLike(String username, Long boardId, LikeRequest likeRequest) {
-        Member member = getMemberByUsername(username);
+    public void toggleLike(String authUsername, Long boardId, LikeRequest likeRequest) {
+        Member validMember = getMemberByUsername(authUsername);
         Board validBoard = getBoardById(boardId);
 
         Long validBoardId = validBoard.getId();
-        Long memberId = member.getId();
+        Long memberId = validMember.getId();
 
         if (!likeRequest.isLikeCancel()) {
-            likesRepository.save(LikesMapper.toLikes(validBoard, member));
+            likesRepository.save(LikesMapper.toLikes(validBoard, validMember));
             return;
         }
 
@@ -76,26 +76,26 @@ public class BoardCommandServiceImpl implements BoardCommandService {
         likesRepository.delete(likes);
     }
 
-    public void postComment(String username, Long boardId, CommentPostOrModifyRequest commentPostRequest) {
-        Member member = getMemberByUsername(username);
+    public void postComment(String authUsername, Long boardId, CommentPostOrModifyRequest commentPostRequest) {
+        Member validMember = getMemberByUsername(authUsername);
         Board validBoard = getBoardById(boardId);
 
-        commentRepository.save(CommentMapper.toEntity(validBoard, member, commentPostRequest));
+        commentRepository.save(CommentMapper.toEntity(validBoard, validMember, commentPostRequest));
     }
 
-    public void modifyComment(String username, Long commentId, CommentPostOrModifyRequest commentModifyRequest) {
-        Member member = getMemberByUsername(username);
+    public void modifyComment(String authUsername, Long commentId, CommentPostOrModifyRequest commentModifyRequest) {
+        Member validMember = getMemberByUsername(authUsername);
         Comment validComment = getCommentById(commentId);
 
-        validComment.validateSameMember(member.getId());
+        validComment.validateSameMember(validMember.getId());
         validComment.updateComment(commentModifyRequest);
     }
 
-    public void deleteComment(String username, Long commentId) {
-        Member member = getMemberByUsername(username);
+    public void deleteComment(String authUsername, Long commentId) {
+        Member validMember = getMemberByUsername(authUsername);
         Comment validComment = getCommentById(commentId);
 
-        validComment.validateSameMember(member.getId());
+        validComment.validateSameMember(validMember.getId());
         validComment.delete(LocalDateTime.now());
     }
 

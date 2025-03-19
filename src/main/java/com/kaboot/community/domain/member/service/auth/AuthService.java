@@ -6,7 +6,7 @@ import com.kaboot.community.domain.member.dto.request.RegisterRequest;
 
 public interface AuthService {
     void register(RegisterRequest registerRequest);
-    AuthTokens loginV2(LoginRequest loginRequest);
+    AuthTokens login(LoginRequest loginRequest);
     AuthTokens reissue(String refreshToken);
     void logout(String accessToken);
 

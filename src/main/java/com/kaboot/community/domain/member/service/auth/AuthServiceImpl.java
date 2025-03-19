@@ -30,6 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private static final String LOGOUT = "LOGOUT";
 
     private final MemberRepository memberRepository;
+    private final MemberQueryService memberQueryService;
     private final TokenGenerator tokenGenerator;
     private final RedisUtil redisUtil;
     private final JwtUtil jwtUtil;
@@ -40,21 +41,21 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthTokens loginV2(LoginRequest loginRequest) {
-        Member validMember = memberRepository.findByUsername(loginRequest.email())
-                .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
+    public AuthTokens login(LoginRequest loginRequest) {
+        Member validMember = memberQueryService.getMemberByUsername(loginRequest.username());
 
         if(!PasswordUtil.isSamePassword(loginRequest.password(), validMember.getPassword())) {
             throw new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST);
         }
 
-        String refreshToken = redisUtil.getData(RT + validMember.getId());
+        String refreshToken = getRefreshTokenInRedis(validMember.getId());
+
         if (refreshToken == null) {
             refreshToken = jwtUtil.createToken(validMember.getId(), TokenType.REFRESH_TOKEN, validMember.getRole());
             redisUtil.setData(RT + validMember.getId(), refreshToken, jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
         }
 
-        return tokenGenerator.generateTokenWithoutRFToken(validMember.getId(), validMember.getRole());
+        return tokenGenerator.generateToken(validMember.getId(), validMember.getRole());
     }
 
     @Override
@@ -69,11 +70,9 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(CustomResponseStatus.REFRESH_TOKEN_NOT_MATCH);
         }
 
-        Member findMember = memberRepository.findById(tokenInfo.id()).orElseThrow(
-                () -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST)
-        );
+        Member findMember = memberQueryService.getMemberById(tokenInfo.id());
 
-        AuthTokens generateToken = tokenGenerator.generateTokenWithoutRFToken(findMember.getId(), RoleType.fromString(tokenInfo.role()));
+        AuthTokens generateToken = tokenGenerator.generateToken(findMember.getId(), RoleType.fromString(tokenInfo.role()));
         redisUtil.setData(RT + tokenInfo.id(), generateToken.refreshToken(), jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
 
         return generateToken;
@@ -83,11 +82,15 @@ public class AuthServiceImpl implements AuthService {
     public void logout(String accessToken) {
         String resolveAccessToken = jwtUtil.resolveToken(accessToken);
         TokenInfo infoInToken = jwtUtil.getTokenClaims(resolveAccessToken);
-        String refreshTokenInRedis = redisUtil.getData(RT + infoInToken.id());
 
+        String refreshTokenInRedis = getRefreshTokenInRedis(infoInToken.id());
         if (refreshTokenInRedis == null) throw new CustomException(CustomResponseStatus.REFRESH_TOKEN_NOT_FOUND);
 
         redisUtil.deleteDate(RT + infoInToken.id());
         redisUtil.setData(resolveAccessToken, LOGOUT, jwtUtil.getExpiration(resolveAccessToken));
+    }
+
+    private String getRefreshTokenInRedis(Long memberId) {
+        return redisUtil.getData(RT + memberId);
     }
 }

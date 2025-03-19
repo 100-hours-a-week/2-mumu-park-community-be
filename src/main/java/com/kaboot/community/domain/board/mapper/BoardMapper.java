@@ -5,7 +5,6 @@ import com.kaboot.community.domain.board.entity.Board;
 import com.kaboot.community.domain.member.entity.Member;
 
 public class BoardMapper {
-
     public static Board toBoardFromPostRequest(PostOrModifyRequest postRequest, Member member) {
         return Board.builder()
                 .title(postRequest.title())

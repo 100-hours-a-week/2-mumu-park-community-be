@@ -1,13 +1,12 @@
-package com.kaboot.community.config.jwt.handler;
+package com.kaboot.community.common.exception;
 
 import com.kaboot.community.common.enums.CustomResponseStatus;
-import com.kaboot.community.common.exception.CustomException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/exception")
-public class JwtExceptionController {
+public class JwtExceptionHandler {
     @RequestMapping(value = "/accessDenied")
     public void accessException() {
         throw new CustomException(CustomResponseStatus.ACCESS_DENIED);

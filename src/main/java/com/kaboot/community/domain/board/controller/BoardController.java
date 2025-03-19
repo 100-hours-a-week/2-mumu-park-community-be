@@ -28,7 +28,10 @@ public class BoardController {
     ) {
         BoardsResponse response = boardQueryService.getBoards(cursor);
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(
+                response,
+                CustomResponseStatus.SUCCESS.withMessage("게시글 조회에 성공하였습니다."))
+        );
     }
 
     @GetMapping("/{boardId}")
@@ -37,7 +40,10 @@ public class BoardController {
     ) {
         BoardDetailResponse response = boardQueryService.getBoardDetail(boardId);
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(
+                response,
+                CustomResponseStatus.SUCCESS.withMessage("게시글 상세조회에 성공하였습니다."))
+        );
     }
 
     @PostMapping()
@@ -50,7 +56,9 @@ public class BoardController {
                 postRequest
         );
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
+                CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("게시글 등록에 성공하였습니다."))
+        );
     }
 
     @PatchMapping("/{boardId}")
@@ -65,7 +73,9 @@ public class BoardController {
                 boardId
         );
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
+                CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("게시글 수정에 성공하였습니다."))
+        );
     }
 
     @DeleteMapping("/{boardId}")
@@ -78,7 +88,9 @@ public class BoardController {
                 boardId
         );
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
+                CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("게시글 삭제에 성공하였습니다."))
+        );
     }
 
     @PatchMapping("/{boardId}/likes")
@@ -92,7 +104,9 @@ public class BoardController {
                 boardId, likeRequest
         );
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
+                CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("좋아요 처리에 성공하였습니다."))
+        );
     }
 
     @PostMapping("/{boardId}/comments")
@@ -107,7 +121,9 @@ public class BoardController {
                 commentPostRequest
         );
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
+                CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("댓글 작성에 성공하였습니다."))
+        );
     }
 
     @PatchMapping("/comments/{commentId}")
@@ -122,7 +138,9 @@ public class BoardController {
                 commentModifyRequest
         );
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
+                CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("댓글 수정에 성공하였습니다."))
+        );
     }
 
     @DeleteMapping("/comments/{commentId}")
@@ -135,6 +153,8 @@ public class BoardController {
                 commentId
         );
 
-        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(CustomResponseStatus.SUCCESS_WITH_NO_CONTENT));
+        return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
+                CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("댓글 삭제에 성공하였습니다."))
+        );
     }
 }

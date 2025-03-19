@@ -77,6 +77,10 @@ public class JwtUtil {
         return extractAllClaims(token).get(ID, Long.class);
     }
 
+    /***
+     * @param token : 요청이 들어온 토큰
+     * @return : 토큰속(claim)에 있는 클라이언트의 role 리턴
+     */
     public String getRoleInToken(String token) {
         return extractAllClaims(token).get(TOKEN_TYPE, String.class);
     }

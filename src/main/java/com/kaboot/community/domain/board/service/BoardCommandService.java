@@ -5,12 +5,11 @@ import com.kaboot.community.domain.board.dto.request.LikeRequest;
 import com.kaboot.community.domain.board.dto.request.PostOrModifyRequest;
 
 public interface BoardCommandService {
-
-    void postBoard(String username, PostOrModifyRequest postRequest);
-    void modifyBoard(String username, PostOrModifyRequest modifyRequest, Long boardId);
-    void deleteBoard(String username,  Long boardId);
-    void toggleLike(String username, Long boardId, LikeRequest likeRequest);
-    void postComment(String username, Long boardId, CommentPostOrModifyRequest commentPostRequest);
-    void modifyComment(String username, Long commentId, CommentPostOrModifyRequest commentModifyRequest);
-    void deleteComment(String username, Long commentId);
+    void postBoard(String authUsername, PostOrModifyRequest postRequest);
+    void modifyBoard(String authUsername, PostOrModifyRequest modifyRequest, Long boardId);
+    void deleteBoard(String authUsername,  Long boardId);
+    void toggleLike(String authUsername, Long boardId, LikeRequest likeRequest);
+    void postComment(String authUsername, Long boardId, CommentPostOrModifyRequest commentPostRequest);
+    void modifyComment(String authUsername, Long commentId, CommentPostOrModifyRequest commentModifyRequest);
+    void deleteComment(String authUsername, Long commentId);
 }

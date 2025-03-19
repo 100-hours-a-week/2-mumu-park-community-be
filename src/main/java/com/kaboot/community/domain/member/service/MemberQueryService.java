@@ -11,4 +11,6 @@ public interface MemberQueryService {
     boolean isNicknameDuplicate(String nickname);
 
     Member getMemberByUsername(String username);
+
+    Member getMemberById(Long id);
 }

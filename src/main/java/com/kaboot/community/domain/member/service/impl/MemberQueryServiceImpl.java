@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberQueryServiceImpl implements MemberQueryService {
     private final MemberRepository memberRepository;
 
@@ -29,13 +30,11 @@ public class MemberQueryServiceImpl implements MemberQueryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isEmailDuplicate(String email) {
         return memberRepository.existsByUsername(email);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isNicknameDuplicate(String nickname) {
         return memberRepository.existsByNickname(nickname);
     }
@@ -43,6 +42,12 @@ public class MemberQueryServiceImpl implements MemberQueryService {
     @Override
     public Member getMemberByUsername(String username) {
         return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
+    }
+
+    @Override
+    public Member getMemberById(Long id) {
+        return memberRepository.findById(id)
                 .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
     }
 }

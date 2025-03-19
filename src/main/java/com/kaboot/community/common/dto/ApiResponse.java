@@ -1,6 +1,7 @@
 package com.kaboot.community.common.dto;
 
 import com.kaboot.community.common.enums.CustomResponseStatus;
+import com.kaboot.community.common.exception.CustomException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -66,6 +67,10 @@ public class ApiResponse<T> {
      * @return : data 없이 ApiResponse 를 반환한다.
      */
     public static ApiResponse<String> createError(CustomResponseStatus status) {
-        return new ApiResponse<>(status.getHttpStatusCode(), status.getMessage(), null);
+        return new ApiResponse<>(
+                status.getHttpStatusCode(),
+                status.getMessage(),
+                null
+        );
     }
 }

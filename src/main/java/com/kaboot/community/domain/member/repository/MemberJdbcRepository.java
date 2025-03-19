@@ -1,6 +1,6 @@
 package com.kaboot.community.domain.member.repository;
 
-import com.kaboot.community.domain.member.dto.MemberInfo;
+import com.kaboot.community.domain.member.dto.response.MemberInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

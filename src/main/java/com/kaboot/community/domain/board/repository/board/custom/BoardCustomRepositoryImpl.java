@@ -19,6 +19,7 @@ import static com.kaboot.community.domain.member.entity.QMember.member;
 @RequiredArgsConstructor
 public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
+
     @Override
     public BoardDetailResponse getBoardDetailInfoById(Long boardId) {
         List<BoardDetailResponse.Comments> comments = fetchComments(boardId);
@@ -63,10 +64,10 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
         return jpaQueryFactory
                 .select(Projections.constructor(
                         BoardDetailResponse.Comments.class,
-                        comment.member.id.as("authorId"),
-                        member.profileImgUrl.as("profileImg"),
+                        comment.member.id,
+                        member.profileImgUrl,
                         member.nickname,
-                        comment.modifiedAt.as("updatedAt"),
+                        comment.modifiedAt,
                         comment.content
                 ))
                 .from(comment)

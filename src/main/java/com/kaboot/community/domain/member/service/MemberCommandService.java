@@ -4,11 +4,9 @@ import com.kaboot.community.domain.member.dto.request.ModifyRequest;
 import com.kaboot.community.domain.member.dto.request.PasswordUpdateRequest;
 
 public interface MemberCommandService {
-    void update(String userEmail, ModifyRequest modifyRequest);
+    void update(String authUsername, ModifyRequest modifyRequest);
 
-    void updatePassword(String userEmail, PasswordUpdateRequest passwordUpdateRequest);
+    void updatePassword(String authUsername, PasswordUpdateRequest passwordUpdateRequest);
 
-    void withdrawal(String loggedInUsername);
-
-
+    void withdrawal(String authUsername);
 }
