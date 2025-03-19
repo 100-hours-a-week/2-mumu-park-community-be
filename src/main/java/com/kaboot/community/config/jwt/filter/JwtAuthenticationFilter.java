@@ -18,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,12 +30,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
 
-    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String resolveToken = jwtUtil.resolveToken(request.getHeader(AUTHORIZATION));
 
-        if (resolveToken.isEmpty()) {
-            filterChain.doFilter(request, response);
+        if (Objects.equals(resolveToken, "")) {
+            request.getRequestDispatcher("/exception/entrypoint/nullToken").forward(request, response);
             return;
         }
 
@@ -43,11 +43,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = jwtUtil.getAuthentication(resolveToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (CustomException e) {
-            handleException(request, CustomResponseStatus.LOGOUT_MEMBER);
+            request.getRequestDispatcher("/exception/entrypoint/logout").forward(request, response);
         } catch (ExpiredJwtException e) {
-            handleException(request, CustomResponseStatus.EXPIRED_JWT);
+            request.getRequestDispatcher("/exception/entrypoint/expiredToken").forward(request, response);
         } catch (JwtException | IllegalArgumentException e) {
-            handleException(request, CustomResponseStatus.BAD_JWT);
+            request.getRequestDispatcher("/exception/entrypoint/badToken").forward(request, response);
         }
 
         filterChain.doFilter(request, response);
