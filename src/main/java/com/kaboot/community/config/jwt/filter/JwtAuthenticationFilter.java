@@ -63,6 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String[] excludePath = {
+                "/auth/register",
                 "/auth/tokens",
                 "/auth/reissue",
                 "/boards",

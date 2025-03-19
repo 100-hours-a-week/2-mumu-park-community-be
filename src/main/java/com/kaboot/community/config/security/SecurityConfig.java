@@ -56,6 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(
                                 "/auth/tokens",
+                                "/auth/register",
                                 "/auth/reissue",
                                 "/boards",
                                 "/favicon.ico"
