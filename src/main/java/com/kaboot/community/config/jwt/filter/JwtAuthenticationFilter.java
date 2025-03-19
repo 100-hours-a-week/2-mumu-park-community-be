@@ -23,7 +23,6 @@ import java.util.Objects;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private static final String EXCEPTION = "exception";
     private static final String AUTHORIZATION = "Authorization";
     private static final String LOGOUT = "LOGOUT";
 
@@ -59,10 +58,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (redisLogoutValue != null && redisLogoutValue.equals(LOGOUT)) {
             throw new CustomException(CustomResponseStatus.LOGOUT_MEMBER);
         }
-    }
-
-    private void handleException(HttpServletRequest request, CustomResponseStatus status) {
-        request.setAttribute(EXCEPTION, status.getMessage());
     }
 
     @Override

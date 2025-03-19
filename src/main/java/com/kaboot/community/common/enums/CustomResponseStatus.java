@@ -22,9 +22,9 @@ public enum CustomResponseStatus {
     LOGOUT_MEMBER(HttpStatus.NOT_FOUND.value(), "로그아웃 되었습니다. 다시 로그인을 진행해주세요."),
     UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED.value(), "권한이 없습니다."),ACCESS_DENIED(HttpStatus.FORBIDDEN.value(), "권한이 없습니다."),
     EXPIRED_JWT(HttpStatus.UNAUTHORIZED.value(), "만료된 토큰입니다."),
-    NULL_JWT(HttpStatus.NO_CONTENT.value(),  "토큰이 공백입니다."),
+    NULL_JWT(HttpStatus.BAD_REQUEST.value(),  "토큰이 공백입니다."),
 
-    BAD_JWT(HttpStatus.UNAUTHORIZED.value(), "잘못된 토큰입니다."),
+    BAD_JWT(HttpStatus.BAD_REQUEST.value(), "잘못된 토큰입니다."),
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED.value(), "리프레시 토큰이 만료되었습니다. 재로그인을 진행해주세요."),
     REFRESH_TOKEN_NOT_MATCH(HttpStatus.CONFLICT.value(), "잘못된 리프레시 토큰입니다."),
     LOGIN_FAILED(HttpStatus.CONFLICT.value(), "아이디 또는 비밀번호가 일치하지 않습니다."),
