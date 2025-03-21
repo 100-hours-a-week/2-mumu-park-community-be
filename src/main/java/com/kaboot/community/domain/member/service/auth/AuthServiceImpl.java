@@ -9,12 +9,11 @@ import com.kaboot.community.domain.member.dto.request.LoginRequest;
 import com.kaboot.community.domain.member.dto.request.RegisterRequest;
 import com.kaboot.community.domain.member.entity.Member;
 import com.kaboot.community.domain.member.entity.enums.RoleType;
-import com.kaboot.community.domain.member.mapper.UserMapper;
 import com.kaboot.community.domain.member.repository.MemberRepository;
 import com.kaboot.community.domain.member.service.MemberQueryService;
+import com.kaboot.community.domain.member.service.password.PasswordEncoder;
 import com.kaboot.community.util.jwt.JwtUtil;
 import com.kaboot.community.util.jwt.TokenGenerator;
-import com.kaboot.community.util.password.PasswordUtil;
 import com.kaboot.community.util.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,20 +30,21 @@ public class AuthServiceImpl implements AuthService {
 
     private final MemberRepository memberRepository;
     private final MemberQueryService memberQueryService;
+    private final PasswordEncoder passwordEncoder;
     private final TokenGenerator tokenGenerator;
     private final RedisUtil redisUtil;
     private final JwtUtil jwtUtil;
 
     @Override
     public void register(RegisterRequest registerRequest) {
-        memberRepository.save(UserMapper.toEntity(registerRequest));
+        memberRepository.save(registerRequest.toEntity(passwordEncoder.hash(registerRequest.password())));
     }
 
     @Override
     public AuthTokens login(LoginRequest loginRequest) {
         Member validMember = memberQueryService.getMemberByUsername(loginRequest.username());
 
-        if(!PasswordUtil.isSamePassword(loginRequest.password(), validMember.getPassword())) {
+        if(!passwordEncoder.matches(loginRequest.password(), validMember.getPassword())) {
             throw new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST);
         }
 

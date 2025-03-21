@@ -7,7 +7,7 @@ import com.kaboot.community.domain.member.dto.request.PasswordUpdateRequest;
 import com.kaboot.community.domain.member.entity.Member;
 import com.kaboot.community.domain.member.service.MemberCommandService;
 import com.kaboot.community.domain.member.service.MemberQueryService;
-import com.kaboot.community.util.password.PasswordUtil;
+import com.kaboot.community.domain.member.service.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @Transactional
 public class MemberCommandServiceImpl implements MemberCommandService {
     private final MemberQueryService memberQueryService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void update(String authUsername, ModifyRequest modifyRequest) {
@@ -35,7 +36,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     public void updatePassword(String authUsername, PasswordUpdateRequest passwordUpdateRequest) {
         Member validMember = memberQueryService.getMemberByUsername(authUsername);
 
-        validMember.updatePassword(PasswordUtil.hashPassword(passwordUpdateRequest.newPassword()));
+        validMember.updatePassword(passwordEncoder.hash(passwordUpdateRequest.newPassword()));
     }
 
     @Override

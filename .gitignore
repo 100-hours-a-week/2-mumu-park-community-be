@@ -41,6 +41,7 @@ application.yml
 application-local.yml
 application-prod.yml
 application-dev.yml
+application-test.yml
 
 ### 로그 파일 ###
 logs/
