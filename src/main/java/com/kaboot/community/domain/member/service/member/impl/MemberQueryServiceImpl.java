@@ -1,9 +1,9 @@
-package com.kaboot.community.domain.member.service.impl;
+package com.kaboot.community.domain.member.service.member.impl;
 
 import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.exception.CustomException;
 import com.kaboot.community.domain.member.repository.MemberRepository;
-import com.kaboot.community.domain.member.service.MemberQueryService;
+import com.kaboot.community.domain.member.service.member.MemberQueryService;
 import com.kaboot.community.domain.member.dto.response.MemberInfoResponse;
 import com.kaboot.community.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;

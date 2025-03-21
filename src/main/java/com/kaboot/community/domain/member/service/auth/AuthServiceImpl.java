@@ -10,7 +10,7 @@ import com.kaboot.community.domain.member.dto.request.RegisterRequest;
 import com.kaboot.community.domain.member.entity.Member;
 import com.kaboot.community.domain.member.entity.enums.RoleType;
 import com.kaboot.community.domain.member.repository.MemberRepository;
-import com.kaboot.community.domain.member.service.MemberQueryService;
+import com.kaboot.community.domain.member.service.member.MemberQueryService;
 import com.kaboot.community.domain.member.service.password.PasswordEncoder;
 import com.kaboot.community.util.jwt.JwtUtil;
 import com.kaboot.community.util.jwt.TokenGenerator;

@@ -1,12 +1,12 @@
-package com.kaboot.community.domain.member.service.impl;
+package com.kaboot.community.domain.member.service.member.impl;
 
 import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.exception.CustomException;
 import com.kaboot.community.domain.member.dto.request.ModifyRequest;
 import com.kaboot.community.domain.member.dto.request.PasswordUpdateRequest;
 import com.kaboot.community.domain.member.entity.Member;
-import com.kaboot.community.domain.member.service.MemberCommandService;
-import com.kaboot.community.domain.member.service.MemberQueryService;
+import com.kaboot.community.domain.member.service.member.MemberCommandService;
+import com.kaboot.community.domain.member.service.member.MemberQueryService;
 import com.kaboot.community.domain.member.service.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.kaboot.community.domain.member.service;
+package com.kaboot.community.domain.member.service.member;
 
 import com.kaboot.community.domain.member.dto.request.ModifyRequest;
 import com.kaboot.community.domain.member.dto.request.PasswordUpdateRequest;
