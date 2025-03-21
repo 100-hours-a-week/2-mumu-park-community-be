@@ -37,6 +37,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void register(RegisterRequest registerRequest) {
+        if (memberQueryService.isEmailDuplicate(registerRequest.email())) {
+            throw new CustomException(CustomResponseStatus.MEMBER_ALREADY_EXIST);
+        }
+
         memberRepository.save(registerRequest.toEntity(passwordEncoder.hash(registerRequest.password())));
     }
 
@@ -44,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthTokens login(LoginRequest loginRequest) {
         Member validMember = memberQueryService.getMemberByUsername(loginRequest.username());
 
-        if(!passwordEncoder.matches(loginRequest.password(), validMember.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.password(), validMember.getPassword())) {
             throw new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST);
         }
 
@@ -53,6 +57,7 @@ public class AuthServiceImpl implements AuthService {
         if (refreshToken == null) {
             refreshToken = jwtUtil.createToken(validMember.getId(), TokenType.REFRESH_TOKEN, validMember.getRole());
             redisUtil.setData(RT + validMember.getId(), refreshToken, jwtUtil.getExpiration(TokenType.REFRESH_TOKEN));
+            return tokenGenerator.generateTokenWithRF(validMember.getId(), refreshToken, validMember.getRole());
         }
 
         return tokenGenerator.generateToken(validMember.getId(), validMember.getRole());

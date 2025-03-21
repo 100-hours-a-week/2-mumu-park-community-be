@@ -37,6 +37,15 @@ public class Member extends BaseEntity {
     @Column(name = "role", length = 20)
     private RoleType role;
 
+    @Builder
+    private Member(String username, String password, String nickname, String profileImgUrl, RoleType role) {
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.profileImgUrl = profileImgUrl;
+        this.role = role;
+    }
+
     public void update(ModifyRequest modifyRequest) {
         this.nickname = modifyRequest.nickname();
         this.profileImgUrl = modifyRequest.profileImg();

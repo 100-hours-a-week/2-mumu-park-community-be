@@ -30,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/tokens")
-    public ResponseEntity<ApiResponse<LoginResponse>> loginWithToken(
+    public ResponseEntity<ApiResponse<LoginResponse>> login(
             HttpServletResponse response,
             @RequestBody LoginRequest loginRequest
     ) {
