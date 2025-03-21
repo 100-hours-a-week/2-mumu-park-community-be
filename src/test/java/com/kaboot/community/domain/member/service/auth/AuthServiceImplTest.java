@@ -261,8 +261,6 @@ class AuthServiceImplTest {
                 .hasMessage(CustomResponseStatus.REFRESH_TOKEN_NOT_FOUND.getMessage());
     }
 
-
-
     private Member createMember() {
         return Member.builder()
                 .id(1L)
