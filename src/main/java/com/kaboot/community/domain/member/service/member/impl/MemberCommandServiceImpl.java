@@ -9,6 +9,7 @@ import com.kaboot.community.domain.member.service.member.MemberCommandService;
 import com.kaboot.community.domain.member.service.member.MemberQueryService;
 import com.kaboot.community.domain.member.service.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @PreAuthorize("isAuthenticated() and hasAuthority('MEMBER') and authentication.principal.username == #authUsername")
     public void update(String authUsername, ModifyRequest modifyRequest) {
         Member validMember = memberQueryService.getMemberByUsername(authUsername);
 
@@ -33,6 +35,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated() and hasAuthority('MEMBER') and authentication.principal.username == #authUsername")
     public void updatePassword(String authUsername, PasswordUpdateRequest passwordUpdateRequest) {
         Member validMember = memberQueryService.getMemberByUsername(authUsername);
 
@@ -40,6 +43,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated() and hasAuthority('MEMBER') and authentication.principal.username == #authUsername")
     public void withdrawal(String authUsername) {
         Member validMember = memberQueryService.getMemberByUsername(authUsername);
 

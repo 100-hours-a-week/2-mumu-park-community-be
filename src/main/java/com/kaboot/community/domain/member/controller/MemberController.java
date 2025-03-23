@@ -9,6 +9,7 @@ import com.kaboot.community.domain.member.dto.response.ExistResponse;
 import com.kaboot.community.domain.member.dto.response.MemberInfoResponse;
 import com.kaboot.community.domain.member.service.member.MemberCommandService;
 import com.kaboot.community.domain.member.service.member.MemberQueryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -54,7 +55,7 @@ public class MemberController {
     @PatchMapping()
     public ResponseEntity<ApiResponse<Void>> updateMember(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody ModifyRequest modifyRequest
+            @RequestBody @Valid ModifyRequest modifyRequest
     ) {
         memberCommandService.update(principalDetails.getUsername(), modifyRequest);
 
@@ -66,7 +67,7 @@ public class MemberController {
     @PatchMapping("/password")
     public ResponseEntity<ApiResponse<Void>> updatePassword(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody PasswordUpdateRequest passwordUpdateRequest
+            @RequestBody @Valid PasswordUpdateRequest passwordUpdateRequest
     ) {
         memberCommandService.updatePassword(principalDetails.getUsername(), passwordUpdateRequest);
 

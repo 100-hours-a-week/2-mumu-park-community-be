@@ -10,6 +10,7 @@ import com.kaboot.community.domain.member.dto.response.ReissueResponse;
 import com.kaboot.community.domain.member.service.auth.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<Void>> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<ApiResponse<Void>> register(@RequestBody @Valid RegisterRequest registerRequest) {
         authService.register(registerRequest);
 
         return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
@@ -32,7 +33,7 @@ public class AuthController {
     @PostMapping("/tokens")
     public ResponseEntity<ApiResponse<LoginResponse>> login(
             HttpServletResponse response,
-            @RequestBody LoginRequest loginRequest
+            @RequestBody @Valid LoginRequest loginRequest
     ) {
         AuthTokens tokens = authService.login(loginRequest);
         setRefreshTokenInCookie(response, tokens.refreshToken());

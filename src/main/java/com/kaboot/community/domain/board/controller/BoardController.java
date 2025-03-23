@@ -10,6 +10,7 @@ import com.kaboot.community.domain.board.service.BoardCommandService;
 import com.kaboot.community.domain.board.service.BoardQueryService;
 import com.kaboot.community.common.dto.ApiResponse;
 import com.kaboot.community.common.enums.CustomResponseStatus;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -49,7 +50,7 @@ public class BoardController {
     @PostMapping()
     public ResponseEntity<ApiResponse<Void>> post(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody PostOrModifyRequest postRequest
+            @RequestBody @Valid PostOrModifyRequest postRequest
     ) {
         boardCommandService.postBoard(
                 principalDetails.getUsername(),
@@ -64,7 +65,7 @@ public class BoardController {
     @PatchMapping("/{boardId}")
     public ResponseEntity<ApiResponse<Void>> modifyBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody PostOrModifyRequest modifyRequest,
+            @RequestBody @Valid PostOrModifyRequest modifyRequest,
             @PathVariable Long boardId
     ) {
         boardCommandService.modifyBoard(
@@ -97,7 +98,7 @@ public class BoardController {
     public ResponseEntity<ApiResponse<Void>> toggleLike(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long boardId,
-            @RequestBody LikeRequest likeRequest
+            @RequestBody @Valid LikeRequest likeRequest
     ) {
         boardCommandService.toggleLike(
                 principalDetails.getUsername(),
@@ -113,7 +114,7 @@ public class BoardController {
     public ResponseEntity<ApiResponse<Void>> postComment(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long boardId,
-            @RequestBody CommentPostOrModifyRequest commentPostRequest
+            @RequestBody @Valid CommentPostOrModifyRequest commentPostRequest
     ) {
         boardCommandService.postComment(
                 principalDetails.getUsername(),
@@ -130,7 +131,7 @@ public class BoardController {
     public ResponseEntity<ApiResponse<Void>> modifyComment(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long commentId,
-            @RequestBody CommentPostOrModifyRequest commentModifyRequest
+            @RequestBody @Valid CommentPostOrModifyRequest commentModifyRequest
     ) {
         boardCommandService.modifyComment(
                 principalDetails.getUsername(),
