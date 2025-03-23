@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
         Member validMember = memberQueryService.getMemberByUsername(loginRequest.username());
 
         if (!passwordEncoder.matches(loginRequest.password(), validMember.getPassword())) {
-            throw new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST);
+            throw new CustomException(CustomResponseStatus.PASSWORD_NOT_MATCH);
         }
 
         String refreshToken = getRefreshTokenInRedis(validMember.getId());

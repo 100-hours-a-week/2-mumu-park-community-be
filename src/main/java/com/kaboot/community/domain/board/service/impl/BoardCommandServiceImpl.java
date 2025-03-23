@@ -19,6 +19,7 @@ import com.kaboot.community.common.exception.CustomException;
 import com.kaboot.community.domain.member.entity.Member;
 import com.kaboot.community.domain.member.service.member.MemberQueryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,19 +43,17 @@ public class BoardCommandServiceImpl implements BoardCommandService {
         boardRepository.save(board);
     }
 
+    @PreAuthorize("isAuthenticated() and hasAuthority('MEMBER') and authentication.principal.username == #authUsername")
     public void modifyBoard(String authUsername, PostOrModifyRequest modifyRequest, Long boardId) {
-        Member validMember = getMemberByUsername(authUsername);
         Board validBoard = getBoardById(boardId);
 
-        validBoard.validateSameMember(validMember.getId());
         validBoard.update(modifyRequest);
     }
 
+    @PreAuthorize("isAuthenticated() and hasAuthority('MEMBER') and authentication.principal.username == #authUsername")
     public void deleteBoard(String authUsername,  Long boardId) {
-        Member validMember = getMemberByUsername(authUsername);
         Board validBoard = getBoardById(boardId);
 
-        validBoard.validateSameMember(validMember.getId());
         boardRepository.delete(validBoard);
     }
 
@@ -83,19 +82,17 @@ public class BoardCommandServiceImpl implements BoardCommandService {
         commentRepository.save(CommentMapper.toEntity(validBoard, validMember, commentPostRequest));
     }
 
+    @PreAuthorize("isAuthenticated() and hasAuthority('MEMBER') and authentication.principal.username == #authUsername")
     public void modifyComment(String authUsername, Long commentId, CommentPostOrModifyRequest commentModifyRequest) {
-        Member validMember = getMemberByUsername(authUsername);
         Comment validComment = getCommentById(commentId);
 
-        validComment.validateSameMember(validMember.getId());
         validComment.updateComment(commentModifyRequest);
     }
 
+    @PreAuthorize("isAuthenticated() and hasAuthority('MEMBER') and authentication.principal.username == #authUsername")
     public void deleteComment(String authUsername, Long commentId) {
-        Member validMember = getMemberByUsername(authUsername);
         Comment validComment = getCommentById(commentId);
 
-        validComment.validateSameMember(validMember.getId());
         validComment.delete(LocalDateTime.now());
     }
 

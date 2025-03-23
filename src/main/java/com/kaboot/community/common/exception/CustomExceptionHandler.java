@@ -5,6 +5,7 @@ import com.kaboot.community.common.enums.CustomResponseStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,6 +58,12 @@ public class CustomExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleAccessDeniedException(CustomException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.createError(e.getCustomResponseStatus()));
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ApiResponse<String>> handleAuthorizationDeniedException(AuthorizationDeniedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.createError(CustomResponseStatus.ACCESS_DENIED));
     }
 
     private String getStackTraceAsString(Throwable e) {

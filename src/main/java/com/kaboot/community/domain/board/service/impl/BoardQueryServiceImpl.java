@@ -39,7 +39,7 @@ public class BoardQueryServiceImpl implements BoardQueryService {
     public BoardDetailResponse getBoardDetail(Long boardId) {
         Board board = getBoardById(boardId);
 
-        board.upViewCount();
+        board.increaseViewCount();
         return boardRepository.getBoardDetailInfoById(board.getId());
     }
 

@@ -19,10 +19,11 @@ import java.util.Objects;
 @SQLRestriction("deleted_at is NULL")
 public class Board extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id")
     private Member member;
 
@@ -40,7 +41,7 @@ public class Board extends BaseEntity {
 
     private Integer viewCount;
 
-    public void upViewCount() {
+    public void increaseViewCount() {
         this.viewCount++;
     }
 
