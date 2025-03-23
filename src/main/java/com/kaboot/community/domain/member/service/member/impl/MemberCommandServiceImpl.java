@@ -27,7 +27,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     public void update(String authUsername, ModifyRequest modifyRequest) {
         Member validMember = memberQueryService.getMemberByUsername(authUsername);
 
-        if (memberQueryService.isNicknameDuplicate(modifyRequest.nickname())) {
+        if (memberQueryService.isNicknameDuplicate(modifyRequest.nickname()).isExist()) {
             throw new CustomException(CustomResponseStatus.NICKNAME_ALREADY_EXIST);
         }
 

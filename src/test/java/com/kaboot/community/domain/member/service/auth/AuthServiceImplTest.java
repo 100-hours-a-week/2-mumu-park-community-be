@@ -7,6 +7,7 @@ import com.kaboot.community.config.jwt.dto.TokenInfo;
 import com.kaboot.community.config.jwt.enums.TokenType;
 import com.kaboot.community.domain.member.dto.request.LoginRequest;
 import com.kaboot.community.domain.member.dto.request.RegisterRequest;
+import com.kaboot.community.domain.member.dto.response.ExistResponse;
 import com.kaboot.community.domain.member.entity.Member;
 import com.kaboot.community.domain.member.entity.enums.RoleType;
 import com.kaboot.community.domain.member.repository.MemberRepository;
@@ -54,7 +55,7 @@ class AuthServiceImplTest {
     void registerWithValidRequest() {
         // given
         RegisterRequest validRequest = new RegisterRequest("test@test.com", "test1!", "testName", "http://test.jpeg");
-
+        when(memberQueryService.isEmailDuplicate(anyString())).thenReturn(new ExistResponse(false));
         // when
         authService.register(validRequest);
 
@@ -68,7 +69,7 @@ class AuthServiceImplTest {
     void existMemberRegister() {
         // given
         RegisterRequest invalidRequest = new RegisterRequest("test@test.com", "test1!", "testName", "http://test.jpeg");
-        when(memberQueryService.isEmailDuplicate(any(String.class))).thenReturn(true);
+        when(memberQueryService.isEmailDuplicate(any(String.class))).thenReturn(new ExistResponse(true));
 
         // then
         assertThatThrownBy(() -> authService.register(invalidRequest))
@@ -144,7 +145,7 @@ class AuthServiceImplTest {
         assertThatThrownBy(() ->
                 authService.login(invalidLoginRequest)
         ).isInstanceOf(CustomException.class)
-                .hasMessage(CustomResponseStatus.MEMBER_NOT_EXIST.getMessage());
+                .hasMessage(CustomResponseStatus.PASSWORD_NOT_MATCH.getMessage());
     }
     
     @Test

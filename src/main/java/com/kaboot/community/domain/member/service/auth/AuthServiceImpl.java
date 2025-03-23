@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void register(RegisterRequest registerRequest) {
-        if (memberQueryService.isEmailDuplicate(registerRequest.email())) {
+        if (memberQueryService.isEmailDuplicate(registerRequest.email()).isExist()) {
             throw new CustomException(CustomResponseStatus.MEMBER_ALREADY_EXIST);
         }
 

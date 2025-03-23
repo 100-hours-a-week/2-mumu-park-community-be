@@ -2,6 +2,7 @@ package com.kaboot.community.domain.member.service.member.impl;
 
 import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.exception.CustomException;
+import com.kaboot.community.domain.member.dto.response.ExistResponse;
 import com.kaboot.community.domain.member.dto.response.MemberInfoResponse;
 import com.kaboot.community.domain.member.entity.Member;
 import com.kaboot.community.domain.member.entity.enums.RoleType;
@@ -74,10 +75,10 @@ class MemberQueryServiceImplTest {
         when(memberRepository.existsByUsername(existEmail)).thenReturn(true);
 
         //when
-        boolean actualEmailExistValue = memberQueryService.isEmailDuplicate(existEmail);
+        ExistResponse actualEmailExistValue = memberQueryService.isEmailDuplicate(existEmail);
 
         //then
-        assertThat(actualEmailExistValue).isTrue();
+        assertThat(actualEmailExistValue.isExist()).isTrue();
     }
 
     @Test
@@ -89,10 +90,10 @@ class MemberQueryServiceImplTest {
         when(memberRepository.existsByUsername(notExistEmail)).thenReturn(false);
 
         //when
-        boolean actualEmailExistValue = memberQueryService.isEmailDuplicate(notExistEmail);
+        ExistResponse actualEmailExistValue = memberQueryService.isEmailDuplicate(notExistEmail);
 
         //then
-        assertThat(actualEmailExistValue).isFalse();
+        assertThat(actualEmailExistValue.isExist()).isFalse();
     }
 
     private Member createMember() {

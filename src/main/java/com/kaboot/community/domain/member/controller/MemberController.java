@@ -24,19 +24,19 @@ public class MemberController {
 
     @GetMapping("/email")
     public ResponseEntity<ApiResponse<ExistResponse>> checkEmailDuplicate(@RequestParam String email) {
-        boolean isDuplicate = memberQueryService.isEmailDuplicate(email);
+        ExistResponse response = memberQueryService.isEmailDuplicate(email);
 
         return ResponseEntity.ok(ApiResponse.createSuccess(
-                new ExistResponse(isDuplicate),
+                response,
                 CustomResponseStatus.SUCCESS
         ));
     }
 
     @GetMapping("/nickname")
     public ResponseEntity<ApiResponse<ExistResponse>> checkNicknameDuplicate(@RequestParam String nickname) {
-        boolean isDuplicate = memberQueryService.isNicknameDuplicate(nickname);
+        ExistResponse response = memberQueryService.isNicknameDuplicate(nickname);
         return ResponseEntity.ok(ApiResponse.createSuccess(
-                new ExistResponse(isDuplicate),
+                response,
                 CustomResponseStatus.SUCCESS
         ));
     }

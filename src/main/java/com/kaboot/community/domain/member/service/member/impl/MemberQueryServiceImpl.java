@@ -2,6 +2,7 @@ package com.kaboot.community.domain.member.service.member.impl;
 
 import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.exception.CustomException;
+import com.kaboot.community.domain.member.dto.response.ExistResponse;
 import com.kaboot.community.domain.member.repository.MemberRepository;
 import com.kaboot.community.domain.member.service.member.MemberQueryService;
 import com.kaboot.community.domain.member.dto.response.MemberInfoResponse;
@@ -30,13 +31,13 @@ public class MemberQueryServiceImpl implements MemberQueryService {
     }
 
     @Override
-    public boolean isEmailDuplicate(String email) {
-        return memberRepository.existsByUsername(email);
+    public ExistResponse isEmailDuplicate(String email) {
+        return new ExistResponse(memberRepository.existsByUsername(email));
     }
 
     @Override
-    public boolean isNicknameDuplicate(String nickname) {
-        return memberRepository.existsByNickname(nickname);
+    public ExistResponse isNicknameDuplicate(String nickname) {
+        return new ExistResponse(memberRepository.existsByNickname(nickname));
     }
 
     @Override
