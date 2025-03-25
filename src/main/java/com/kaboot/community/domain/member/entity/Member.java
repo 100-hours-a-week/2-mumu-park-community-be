@@ -47,6 +47,10 @@ public class Member extends BaseEntity {
         this.role = role;
     }
 
+    public boolean isMe(String accessUsername) {
+        return this.username.equals(accessUsername);
+    }
+
     public void update(ModifyRequest modifyRequest) {
         this.nickname = modifyRequest.nickname();
         this.profileImgUrl = modifyRequest.profileImg();
