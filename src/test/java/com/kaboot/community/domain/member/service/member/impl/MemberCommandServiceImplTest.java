@@ -7,7 +7,6 @@ import com.kaboot.community.domain.member.dto.request.PasswordUpdateRequest;
 import com.kaboot.community.domain.member.dto.response.ExistResponse;
 import com.kaboot.community.domain.member.entity.Member;
 import com.kaboot.community.domain.member.entity.enums.RoleType;
-import com.kaboot.community.domain.member.repository.MemberRepository;
 import com.kaboot.community.domain.member.service.member.MemberQueryService;
 import com.kaboot.community.domain.member.service.password.PasswordEncoder;
 import org.junit.jupiter.api.DisplayName;

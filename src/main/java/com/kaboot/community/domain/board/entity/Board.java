@@ -41,6 +41,10 @@ public class Board extends BaseEntity {
         this.viewCount++;
     }
 
+    public boolean canAccess(String accessUsername) {
+        return member.isMe(accessUsername);
+    }
+
     public void update(PostOrModifyRequest modifyRequest) {
         this.title = modifyRequest.title();
         this.content = modifyRequest.content();

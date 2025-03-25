@@ -31,6 +31,10 @@ public class Comment extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    public boolean canAccess(String accessUsername) {
+        return member.isMe(accessUsername);
+    }
+
     public void updateComment(CommentPostOrModifyRequest modifyRequest) {
         this.content = modifyRequest.content();
     }

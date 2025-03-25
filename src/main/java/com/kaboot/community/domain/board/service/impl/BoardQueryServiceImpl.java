@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.kaboot.community.domain.board.dto.response.BoardsResponse.*;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -26,7 +28,7 @@ public class BoardQueryServiceImpl implements BoardQueryService {
 
     @Override
     public BoardsResponse getBoards(Long cursor) {
-        List<BoardsResponse.BoardSimpleInfo> boardSimpleInfos = boardRepository.getBoardSimpleInfo(cursor, DEFAULT_PAGE_SIZE);
+        List<BoardSimpleInfo> boardSimpleInfos = boardRepository.getBoardSimpleInfo(cursor, DEFAULT_PAGE_SIZE);
 
         Long nextCursor = boardSimpleInfos.isEmpty()
                 ? null
