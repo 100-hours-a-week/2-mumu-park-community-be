@@ -9,7 +9,6 @@ import com.kaboot.community.domain.board.entity.Board;
 import com.kaboot.community.domain.board.entity.Comment;
 import com.kaboot.community.domain.board.entity.Likes;
 import com.kaboot.community.domain.board.mapper.CommentMapper;
-import com.kaboot.community.domain.board.mapper.LikesMapper;
 import com.kaboot.community.domain.board.repository.board.BoardRepository;
 import com.kaboot.community.domain.board.repository.comment.CommentRepository;
 import com.kaboot.community.domain.board.repository.likes.LikesRepository;
@@ -60,7 +59,6 @@ public class BoardCommandServiceImpl implements BoardCommandService {
     }
 
     public void toggleLike(String authUsername, Long boardId, LikeRequest likeRequest) {
-        // Todo : 테스트 진행 필요
         Member validMember = getMemberByUsername(authUsername);
         Board validBoard = getBoardById(boardId);
 
@@ -68,7 +66,7 @@ public class BoardCommandServiceImpl implements BoardCommandService {
         Long memberId = validMember.getId();
 
         if (!likeRequest.isLikeCancel()) {
-            likesRepository.save(LikesMapper.toLikes(validBoard, validMember));
+            likesRepository.save(likeRequest.toEntity(validBoard, validMember));
             return;
         }
 
