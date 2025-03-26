@@ -80,7 +80,7 @@ public class BoardCommandServiceImpl implements BoardCommandService {
         Member validMember = getMemberByUsername(authUsername);
         Board validBoard = getBoardById(boardId);
 
-        commentRepository.save(CommentMapper.toEntity(validBoard, validMember, commentPostRequest));
+        commentRepository.save(commentPostRequest.toEntity(validBoard, validMember));
     }
 
     public void modifyComment(String authUsername, Long commentId, CommentPostOrModifyRequest commentModifyRequest) {
