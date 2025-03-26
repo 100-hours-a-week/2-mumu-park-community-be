@@ -3,9 +3,11 @@ package com.kaboot.community.domain.board.service.impl;
 import com.kaboot.community.common.enums.CustomResponseStatus;
 import com.kaboot.community.common.exception.CustomException;
 import com.kaboot.community.domain.board.dto.request.CommentPostOrModifyRequest;
+import com.kaboot.community.domain.board.dto.request.LikeRequest;
 import com.kaboot.community.domain.board.dto.request.PostOrModifyRequest;
 import com.kaboot.community.domain.board.entity.Board;
 import com.kaboot.community.domain.board.entity.Comment;
+import com.kaboot.community.domain.board.entity.Likes;
 import com.kaboot.community.domain.board.repository.board.BoardRepository;
 import com.kaboot.community.domain.board.repository.comment.CommentRepository;
 import com.kaboot.community.domain.board.repository.likes.LikesRepository;
@@ -13,6 +15,7 @@ import com.kaboot.community.domain.board.service.BoardQueryService;
 import com.kaboot.community.domain.member.entity.Member;
 import com.kaboot.community.domain.member.entity.enums.RoleType;
 import com.kaboot.community.domain.member.service.member.MemberQueryService;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -137,6 +140,75 @@ class BoardCommandServiceImplTest {
     }
 
     @Test
+    @DisplayName("좋아요를 누른 경우 좋아요 반영")
+    void postLikeSuccess() {
+        //given
+        String authUsername = "authUser";
+        Long boardId = 1L;
+        Member member = createMember();
+        Board board = createBoard(member);
+
+        LikeRequest postLikeRequest = new LikeRequest(false);
+
+        when(memberQueryService.getMemberByUsername(authUsername)).thenReturn(member);
+        when(boardQueryService.getBoardById(boardId)).thenReturn(board);
+
+        //when
+        boardCommandService.toggleLike(authUsername, boardId, postLikeRequest);
+
+        //then
+        verify(likesRepository, times(1)).save(any(Likes.class));
+        verify(likesRepository, never()).findByBoardIdAndMemberId(boardId, member.getId());
+        verify(likesRepository, never()).delete(any(Likes.class));
+    }
+
+    @Test
+    @DisplayName("좋아요를 취소한 경우 좋아요 취소")
+    void cancelLikeSuccess() {
+        //given
+        String authUsername = "authUser";
+        Long boardId = 1L;
+        Member member = createMember();
+        Board board = createBoard(member);
+        Likes likes = createLikes(board, member);
+
+        LikeRequest postLikeRequest = new LikeRequest(true);
+
+        when(memberQueryService.getMemberByUsername(authUsername)).thenReturn(member);
+        when(boardQueryService.getBoardById(boardId)).thenReturn(board);
+        when(likesRepository.findByBoardIdAndMemberId(boardId, member.getId())).thenReturn(Optional.ofNullable(likes));
+
+        //when
+        boardCommandService.toggleLike(authUsername, boardId, postLikeRequest);
+
+        //then
+        verify(likesRepository, times(1)).findByBoardIdAndMemberId(boardId, member.getId());
+        verify(likesRepository, times(1)).delete(any(Likes.class));
+        verify(likesRepository, never()).save(likes);
+    }
+
+    @Test
+    @DisplayName("멤버가 존재하지 않는 경우 좋아요 토글 실패")
+    void toggleLikeFailNotExistMember() {
+        //given
+        String invalidUsername = "nonexistent@test.com";
+        Long boardId = 1L;
+        LikeRequest likeRequest = new LikeRequest(false);
+
+        when(memberQueryService.getMemberByUsername(invalidUsername))
+            .thenThrow(new CustomException(CustomResponseStatus.MEMBER_NOT_EXIST));
+
+        //when, then
+        assertThatThrownBy(() -> boardCommandService.toggleLike(invalidUsername, boardId, likeRequest))
+            .isInstanceOf(CustomException.class)
+            .hasMessage(CustomResponseStatus.MEMBER_NOT_EXIST.getMessage());
+
+        verify(likesRepository, never()).save(any(Likes.class));
+        verify(likesRepository, never()).findByBoardIdAndMemberId(anyLong(), anyLong());
+        verify(likesRepository, never()).delete(any(Likes.class));
+    }
+
+    @Test
     @DisplayName("제 3자가 삭제요청을 하는 경우 게시글 삭제 실패")
     void deletePostFailNotAuthMember() {
         //given
@@ -151,6 +223,54 @@ class BoardCommandServiceImplTest {
         assertThatThrownBy(() -> boardCommandService.deleteBoard(invalidUsername, boardId))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(CustomResponseStatus.ACCESS_DENIED.getMessage());
+    }
+
+    @Test
+    @DisplayName("게시글이 존재하지 않는 경우 좋아요 토글 실패")
+    void toggleLikeFailNotExistBoard() {
+        //given
+        String authUsername = "member@test.com";
+        Long invalidBoardId = 999L;
+        Member member = createMember();
+        LikeRequest likeRequest = new LikeRequest(false);
+
+        when(memberQueryService.getMemberByUsername(authUsername)).thenReturn(member);
+        when(boardQueryService.getBoardById(invalidBoardId))
+            .thenThrow(new CustomException(CustomResponseStatus.BOARD_NOT_EXIST));
+
+        //when, then
+        assertThatThrownBy(() -> boardCommandService.toggleLike(authUsername, invalidBoardId, likeRequest))
+            .isInstanceOf(CustomException.class)
+            .hasMessage(CustomResponseStatus.BOARD_NOT_EXIST.getMessage());
+
+        verify(likesRepository, never()).save(any(Likes.class));
+        verify(likesRepository, never()).findByBoardIdAndMemberId(anyLong(), anyLong());
+        verify(likesRepository, never()).delete(any(Likes.class));
+    }
+
+    @Test
+    @DisplayName("좋아요 취소 시 해당 좋아요가 존재하지 않는 경우 실패")
+    void toggleLikeCancelFailLikesNotExist() {
+        //given
+        String authUsername = "member@test.com";
+        Long boardId = 1L;
+        Member member = createMember();
+        Board board = createBoard(member);
+        LikeRequest cancelLikeRequest = new LikeRequest(true); // 좋아요 취소 요청
+
+        when(memberQueryService.getMemberByUsername(authUsername)).thenReturn(member);
+        when(boardQueryService.getBoardById(boardId)).thenReturn(board);
+        when(likesRepository.findByBoardIdAndMemberId(board.getId(), member.getId()))
+            .thenReturn(Optional.empty());
+
+        //when, then
+        assertThatThrownBy(() -> boardCommandService.toggleLike(authUsername, boardId, cancelLikeRequest))
+            .isInstanceOf(CustomException.class)
+            .hasMessage(CustomResponseStatus.LIKES_NOT_EXIST.getMessage());
+
+        verify(likesRepository, times(1)).findByBoardIdAndMemberId(board.getId(), member.getId());
+        verify(likesRepository, never()).save(any(Likes.class));
+        verify(likesRepository, never()).delete(any(Likes.class));
     }
 
     @Test
@@ -288,6 +408,7 @@ class BoardCommandServiceImplTest {
 
     private Board createBoard(Member member) {
        return Board.builder()
+                .id(1L)
                .title("title")
                .content("content")
                .imageOriginalName("name")
@@ -303,5 +424,12 @@ class BoardCommandServiceImplTest {
                 .member(member)
                 .content("content")
                 .build();
+    }
+
+    private Likes createLikes(Board board, Member member) {
+        return Likes.builder()
+            .board(board)
+            .member(member)
+            .build();
     }
 }
