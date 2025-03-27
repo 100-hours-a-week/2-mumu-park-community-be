@@ -48,13 +48,13 @@ public class BoardCommandServiceImpl implements BoardCommandService {
     validBoard.update(modifyRequest);
   }
 
-  public void deleteBoard(String authUsername, Long boardId) {
+  public void deleteBoard(String authUsername, Long boardId, LocalDateTime deletedAt) {
     Board validBoard = getBoardById(boardId);
     if (!validBoard.canAccess(authUsername)) {
       throw new CustomException(CustomResponseStatus.ACCESS_DENIED);
     }
 
-    boardRepository.delete(validBoard);
+    validBoard.delete(deletedAt);
   }
 
   public void toggleLike(String authUsername, Long boardId, LikeRequest likeRequest) {
