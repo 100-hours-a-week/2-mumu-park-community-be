@@ -1,11 +1,10 @@
 package com.kaboot.community.domain.board.repository.likes;
 
 import com.kaboot.community.domain.board.entity.Likes;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+public interface LikesRepository extends JpaRepository<Likes, Long>, LikesCustomRepository {
 
-public interface LikesRepository extends JpaRepository<Likes, Long> {
-
-    Optional<Likes> findByBoardIdAndMemberId(Long boardId, Long memberId);
+  Optional<Likes> findByBoardIdAndMemberId(Long boardId, Long memberId);
 }

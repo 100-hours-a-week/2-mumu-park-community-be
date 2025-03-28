@@ -2,7 +2,6 @@ package com.kaboot.community.domain.board.repository.board.custom;
 
 import static com.kaboot.community.domain.board.dto.response.BoardDetailResponse.BoardDetail;
 import static com.kaboot.community.domain.board.dto.response.BoardDetailResponse.Comments;
-import static com.kaboot.community.domain.board.dto.response.BoardDetailResponse.builder;
 import static com.kaboot.community.domain.board.dto.response.BoardsResponse.BoardSimpleInfo;
 import static com.kaboot.community.domain.board.entity.QBoard.board;
 import static com.kaboot.community.domain.board.entity.QComment.comment;
@@ -28,7 +27,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     List<Comments> comments = fetchComments(boardId);
     BoardDetail boardDetail = fetchBoardDetailInfo(boardId);
 
-    return builder()
+    return BoardDetailResponse.builder()
         .boardDetail(boardDetail)
         .comments(comments)
         .build();
@@ -67,6 +66,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     return jpaQueryFactory
         .select(Projections.constructor(
             Comments.class,
+            comment.id,
             comment.member.id,
             member.profileImgUrl,
             member.nickname,

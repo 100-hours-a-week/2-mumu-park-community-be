@@ -7,6 +7,7 @@ import com.kaboot.community.domain.board.dto.request.CommentPostOrModifyRequest;
 import com.kaboot.community.domain.board.dto.request.LikeRequest;
 import com.kaboot.community.domain.board.dto.request.PostOrModifyRequest;
 import com.kaboot.community.domain.board.dto.response.BoardDetailResponse;
+import com.kaboot.community.domain.board.dto.response.BoardLikeResponse;
 import com.kaboot.community.domain.board.dto.response.BoardsResponse;
 import com.kaboot.community.domain.board.service.BoardCommandService;
 import com.kaboot.community.domain.board.service.BoardQueryService;
@@ -105,6 +106,23 @@ public class BoardController {
     );
   }
 
+  @GetMapping("/{boardId}/likes")
+  public ResponseEntity<ApiResponse<BoardLikeResponse>> checkBoardLikeByUser(
+      @AuthenticationPrincipal PrincipalDetails principalDetails,
+      @PathVariable Long boardId
+  ) {
+    BoardLikeResponse response = boardQueryService.isBoardLikeByUser(
+        principalDetails.getUsername(),
+        boardId
+    );
+
+    return ResponseEntity.ok().body(ApiResponse.createSuccess(
+        response,
+        CustomResponseStatus.SUCCESS.withMessage("게시글 좋아요 여부조회에 성공하였습니다."))
+    );
+  }
+
+
   @PatchMapping("/{boardId}/likes")
   public ResponseEntity<ApiResponse<Void>> toggleLike(
       @AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -142,7 +160,7 @@ public class BoardController {
   public ResponseEntity<ApiResponse<Void>> modifyComment(
       @AuthenticationPrincipal PrincipalDetails principalDetails,
       @PathVariable Long commentId,
-      @RequestBody @Valid CommentPostOrModifyRequest commentModifyRequest
+      @RequestBody(required = false) @Valid CommentPostOrModifyRequest commentModifyRequest
   ) {
     boardCommandService.modifyComment(
         principalDetails.getUsername(),
