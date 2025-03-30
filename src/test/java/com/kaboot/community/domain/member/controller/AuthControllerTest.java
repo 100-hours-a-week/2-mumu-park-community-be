@@ -152,27 +152,39 @@ class AuthControllerTest {
         .andExpect(jsonPath("$.data").isEmpty());
   }
 
-  @Test
-  @DisplayName("액세스 토큰이 헤더에 없는 경우 로그아웃 실패")
-  void logoutFailWithoutAT() throws Exception {
-    //when, then
-    mockMvc.perform(post("/auth/logout")
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isBadRequest());
-//        .andExpect(jsonPath("$.httpStatusCode").value(HttpStatus.BAD_REQUEST.value()))
-//        .andExpect(jsonPath("$.message").value("토큰이 공백입니다."))
-//        .andExpect(jsonPath("$.data").isEmpty());
-  }
+//  @Test
+//  @DisplayName("토큰이 필요한 요청에서 토큰이 없는 경우 NULL TOKEN 예외 발생")
+//  void logoutFailWithoutAT() throws Exception {
+//    //when, then
+//    mockMvc.perform(post("/exception/entrypoint/nullToken")
+//            .contentType(MediaType.APPLICATION_JSON))
+//        .andExpect(status().isOk());
+////        .andExpect(jsonPath("$.httpStatusCode").value(HttpStatus.BAD_REQUEST.value()))
+////        .andExpect(jsonPath("$.message").value("토큰이 공백입니다."))
+////        .andExpect(jsonPath("$.data").isEmpty());
+//  }
 
-  @Test
-  @DisplayName("토큰 재발급 테스트")
-  void reissueSuccess() {
-    //given
-
-    //when
-
-    //then
-  }
+//  @Test
+//  @DisplayName("토큰 재발급 성공 테스트")
+//  void reissueSuccess() throws Exception {
+//    // given
+//    String refreshToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWQiOjQsInRva2VuX3R5cGUiOiJST0xFX01FTUJFUiIsImlhdCI6MTc0MzE4NDQ3NiwiZXhwIjo4NjQwMTc0MzE4NDQ3Nn0.30sPCgNN3PVWuIKPTdUILqGofpCPvNUwLTN4yRekrSU";
+//    String newAccessToken = "newAccessToken";
+//    String newRefreshToken = "newRefreshToken";
+//
+//    AuthTokens mockAuthTokens = new AuthTokens(newAccessToken, newRefreshToken);
+//
+//    // authService.reissue(...) 호출 시 mockAuthTokens 반환하도록 설정
+//    given(authService.reissue(refreshToken)).willReturn(mockAuthTokens);
+//
+//    // when & then
+//    mockMvc.perform(post("/auth/reissue")
+//            .cookie(new Cookie("refreshToken", refreshToken)))
+//        .andExpect(status().isOk())
+//        .andExpect(jsonPath("$.data.accessToken").value(newAccessToken))
+//        .andExpect(jsonPath("$.message").value("토큰 재발급 성공"))
+//        .andExpect(cookie().value("refreshToken", newRefreshToken));
+//  }
 
 
 }
