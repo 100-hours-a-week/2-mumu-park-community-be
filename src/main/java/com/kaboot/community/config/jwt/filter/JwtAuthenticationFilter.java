@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       handleBlacklistedToken(resolveToken);
       Authentication authentication = jwtUtil.getAuthentication(resolveToken);
       SecurityContextHolder.getContext().setAuthentication(authentication);
-//      filterChain.doFilter(request, response);
+      filterChain.doFilter(request, response);
     } catch (CustomException e) {
       request.getRequestDispatcher("/exception/entrypoint/logout").forward(request, response);
     } catch (ExpiredJwtException e) {
@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       request.getRequestDispatcher("/exception/entrypoint/badToken").forward(request, response);
     }
 
-    filterChain.doFilter(request, response);
+//    filterChain.doFilter(request, response);
   }
 
   // 로그아웃한 사용자가 접근하는지 파악. -> 접근할경우 예외발생
@@ -71,6 +71,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/auth/tokens",
         "/auth/reissue",
         "/boards",
+        "/users/email",
+        "/users/nickname",
         "/favicon.ico"
     };
     String path = request.getRequestURI();
