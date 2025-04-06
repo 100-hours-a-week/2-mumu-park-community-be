@@ -247,7 +247,7 @@ class AuthControllerTest {
 
     // 2. refreshToken 추출
     String refreshToken = loginResult.getResponse().getCookie("refreshToken").getValue();
-    System.out.println("refreshToken = " + refreshToken);
+    
     // 3. 토큰 재발급 요청
     mockMvc.perform(post("/auth/reissue")
             .cookie(new Cookie("refreshToken", refreshToken)))
