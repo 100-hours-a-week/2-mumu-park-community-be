@@ -36,7 +36,7 @@ public class MemberController {
 
     return ResponseEntity.ok(ApiResponse.createSuccess(
         response,
-        CustomResponseStatus.SUCCESS
+        CustomResponseStatus.SUCCESS.withMessage("이메일 중복 체크에 성공하였습니다.")
     ));
   }
 
@@ -46,7 +46,7 @@ public class MemberController {
     ExistResponse response = memberQueryService.isNicknameDuplicate(nickname);
     return ResponseEntity.ok(ApiResponse.createSuccess(
         response,
-        CustomResponseStatus.SUCCESS
+        CustomResponseStatus.SUCCESS.withMessage("닉네임 중복 체크에 성공하였습니다.")
     ));
   }
 
@@ -58,7 +58,7 @@ public class MemberController {
         principalDetails.getUsername());
     return ResponseEntity.ok(ApiResponse.createSuccess(
         response,
-        CustomResponseStatus.SUCCESS
+        CustomResponseStatus.SUCCESS.withMessage("유저 정보 조회에 성공하였습니다.")
     ));
   }
 
@@ -70,7 +70,7 @@ public class MemberController {
     memberCommandService.update(principalDetails.getUsername(), modifyRequest);
 
     return ResponseEntity.ok().body(ApiResponse.createSuccessWithNoContent(
-        CustomResponseStatus.SUCCESS_WITH_NO_CONTENT
+        CustomResponseStatus.SUCCESS_WITH_NO_CONTENT.withMessage("유저 정보 수정에 성공하였습니다.")
     ));
   }
 

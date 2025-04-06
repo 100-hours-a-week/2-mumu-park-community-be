@@ -81,7 +81,7 @@ class MemberControllerTest {
             .param("email", email))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.isExist").value(true))
-        .andExpect(jsonPath("$.message").value("요청에 성공하였습니다."));
+        .andExpect(jsonPath("$.message").value("이메일 중복 체크에 성공하였습니다."));
   }
 
   @Test
@@ -95,7 +95,7 @@ class MemberControllerTest {
             .param("email", email))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.isExist").value(false))
-        .andExpect(jsonPath("$.message").value("요청에 성공하였습니다."));
+        .andExpect(jsonPath("$.message").value("이메일 중복 체크에 성공하였습니다."));
   }
 
   @Test
@@ -109,7 +109,7 @@ class MemberControllerTest {
             .param("nickname", existNickname))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.isExist").value(true))
-        .andExpect(jsonPath("$.message").value("요청에 성공하였습니다."));
+        .andExpect(jsonPath("$.message").value("닉네임 중복 체크에 성공하였습니다."));
   }
 
   @Test
@@ -123,7 +123,7 @@ class MemberControllerTest {
             .param("nickname", notExistNickname))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.isExist").value(false))
-        .andExpect(jsonPath("$.message").value("요청에 성공하였습니다."));
+        .andExpect(jsonPath("$.message").value("닉네임 중복 체크에 성공하였습니다."));
   }
 
   @Test
@@ -139,7 +139,7 @@ class MemberControllerTest {
         .andExpect(jsonPath("$.data.nickname").value(testMember.getNickname()))
         .andExpect(jsonPath("$.data.email").value(testMember.getUsername()))
         .andExpect(jsonPath("$.data.profileImg").value(testMember.getProfileImgUrl()))
-        .andExpect(jsonPath("$.message").value("요청에 성공하였습니다."));
+        .andExpect(jsonPath("$.message").value("유저 정보 조회에 성공하였습니다."));
   }
 
   @Test
@@ -155,8 +155,8 @@ class MemberControllerTest {
                 .content(objectMapper.writeValueAsString(validModifyRequest))
                 .contentType(MediaType.APPLICATION_JSON)
         )
-        .andExpect(status().isOk());
-//        .andExpect(jsonPath("$.message").value("요청에 성공하였습니다."));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message").value("유저 정보 수정에 성공하였습니다."));
 
     assertThat(testMember.getNickname()).isEqualTo(validModifyRequest.nickname());
     assertThat(testMember.getProfileImgUrl()).isEqualTo(validModifyRequest.profileImg());
